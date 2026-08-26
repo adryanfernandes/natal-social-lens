@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 
 export interface ChartCardProps {
   title: string;
-  description?: string;
+  description?: string | undefined;
   /** Informação auxiliar exibida no canto superior direito. */
-  meta?: string;
-  className?: string;
+  meta?: string | undefined;
+  className?: string | undefined;
   children: ReactNode;
 }
 
