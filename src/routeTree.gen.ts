@@ -10,33 +10,68 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FamiliasRouteImport } from './routes/familias'
+import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
+import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FamiliasRoute = FamiliasRouteImport.update({
+  id: '/familias',
+  path: '/familias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilPopulacaoRoute = PerfilPopulacaoRouteImport.update({
+  id: '/perfil-populacao',
+  path: '/perfil-populacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
+  id: '/renda-vulnerabilidade',
+  path: '/renda-vulnerabilidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/familias': typeof FamiliasRoute
+  '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/familias': typeof FamiliasRoute
+  '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/familias': typeof FamiliasRoute
+  '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/familias' | '/perfil-populacao' | '/renda-vulnerabilidade'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/familias' | '/perfil-populacao' | '/renda-vulnerabilidade'
+  id:
+    | '__root__'
+    | '/'
+    | '/familias'
+    | '/perfil-populacao'
+    | '/renda-vulnerabilidade'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FamiliasRoute: typeof FamiliasRoute
+  PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
+  RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +83,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/familias': {
+      id: '/familias'
+      path: '/familias'
+      fullPath: '/familias'
+      preLoaderRoute: typeof FamiliasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil-populacao': {
+      id: '/perfil-populacao'
+      path: '/perfil-populacao'
+      fullPath: '/perfil-populacao'
+      preLoaderRoute: typeof PerfilPopulacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/renda-vulnerabilidade': {
+      id: '/renda-vulnerabilidade'
+      path: '/renda-vulnerabilidade'
+      fullPath: '/renda-vulnerabilidade'
+      preLoaderRoute: typeof RendaVulnerabilidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FamiliasRoute: FamiliasRoute,
+  PerfilPopulacaoRoute: PerfilPopulacaoRoute,
+  RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
