@@ -13,11 +13,11 @@ import {
 import { cn } from "@/lib/utils";
 
 export interface DataTableColumn<T> {
-  key: keyof T & string;
+  key: Extract<keyof T, string>;
   header: string;
-  align?: "left" | "right";
+  align?: "left" | "right" | undefined;
   /** Formatação da célula (ex. moeda, milhar). */
-  render?: (row: T) => string;
+  render?: ((row: T) => string) | undefined;
 }
 
 export interface DataTableProps<T> {
@@ -33,7 +33,7 @@ export interface DataTableProps<T> {
  * Tabela genérica com pesquisa, ordenação e paginação simples.
  * Preparada para receber ações extras (ex. exportação CSV/Excel) no futuro.
  */
-export function DataTable<T extends Record<string, string | number>>({
+export function DataTable<T extends object>({
   title,
   description,
   columns,
@@ -50,13 +50,13 @@ export function DataTable<T extends Record<string, string | number>>({
     const term = query.trim().toLowerCase();
     const base = term
       ? rows.filter((row) =>
-          Object.values(row).some((value) => String(value).toLowerCase().includes(term)),
+          Object.values(row as Record<string, unknown>).some((value) => String(value).toLowerCase().includes(term)),
         )
       : rows;
     if (!sortKey) return base;
     return [...base].sort((a, b) => {
-      const av = a[sortKey];
-      const bv = b[sortKey];
+      const av = (a as Record<string, unknown>)[sortKey];
+      const bv = (b as Record<string, unknown>)[sortKey];
       const result =
         typeof av === "number" && typeof bv === "number"
           ? av - bv
