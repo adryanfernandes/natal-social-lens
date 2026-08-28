@@ -15,6 +15,7 @@ import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
+import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
   path: '/renda-vulnerabilidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
+  id: '/trabalho-renda',
+  path: '/trabalho-renda',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
+    | '/trabalho-renda'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
+    | '/trabalho-renda'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
+    | '/trabalho-renda'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   FamiliasRoute: typeof FamiliasRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
+  TrabalhoRendaRoute: typeof TrabalhoRendaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RendaVulnerabilidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trabalho-renda': {
+      id: '/trabalho-renda'
+      path: '/trabalho-renda'
+      fullPath: '/trabalho-renda'
+      preLoaderRoute: typeof TrabalhoRendaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   FamiliasRoute: FamiliasRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
+  TrabalhoRendaRoute: TrabalhoRendaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
