@@ -90,7 +90,10 @@ export function BarChartCard({
               {data.map((item, index) => (
                 <Cell
                   key={item.label}
-                  fill={multicolor ? chartPalette[index % chartPalette.length] : chartPalette[0]}
+                  fill={
+                    (multicolor ? chartPalette[index % chartPalette.length] : chartPalette[0]) ??
+                    chartPalette[0]!
+                  }
                 />
               ))}
             </Bar>

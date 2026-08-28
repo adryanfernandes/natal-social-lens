@@ -39,7 +39,7 @@ export function DonutChartCard({
               strokeWidth={2}
             >
               {data.map((item, index) => (
-                <Cell key={item.label} fill={chartPalette[index % chartPalette.length]} />
+                <Cell key={item.label} fill={chartPalette[index % chartPalette.length] ?? chartPalette[0]!} />
               ))}
             </Pie>
             <Tooltip
