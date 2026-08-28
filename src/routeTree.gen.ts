@@ -15,6 +15,7 @@ import { Route as CriancasAdolescentesRouteImport } from './routes/criancas-adol
 import { Route as DomiciliosRouteImport } from './routes/domicilios'
 import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
+import { Route as GruposEspecificosRouteImport } from './routes/grupos-especificos'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
@@ -50,6 +51,11 @@ const FamiliasRoute = FamiliasRouteImport.update({
   path: '/familias',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GruposEspecificosRoute = GruposEspecificosRouteImport.update({
+  id: '/grupos-especificos',
+  path: '/grupos-especificos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilPopulacaoRoute = PerfilPopulacaoRouteImport.update({
   id: '/perfil-populacao',
   path: '/perfil-populacao',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   DomiciliosRoute: typeof DomiciliosRoute
   EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
+  GruposEspecificosRoute: typeof GruposEspecificosRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FamiliasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/grupos-especificos': {
+      id: '/grupos-especificos'
+      path: '/grupos-especificos'
+      fullPath: '/grupos-especificos'
+      preLoaderRoute: typeof GruposEspecificosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/perfil-populacao': {
       id: '/perfil-populacao'
       path: '/perfil-populacao'
@@ -242,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   DomiciliosRoute: DomiciliosRoute,
   EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
+  GruposEspecificosRoute: GruposEspecificosRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
