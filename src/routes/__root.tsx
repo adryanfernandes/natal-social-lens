@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { FiltersProvider } from "@/components/dashboard/filters-context";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 function NotFoundComponent() {
   return (
