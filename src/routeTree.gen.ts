@@ -14,6 +14,7 @@ import { Route as DomiciliosRouteImport } from './routes/domicilios'
 import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
+import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
 import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 
@@ -42,6 +43,11 @@ const PerfilPopulacaoRoute = PerfilPopulacaoRouteImport.update({
   path: '/perfil-populacao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PessoasComDeficienciaRoute = PessoasComDeficienciaRouteImport.update({
+  id: '/pessoas-com-deficiencia',
+  path: '/pessoas-com-deficiencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
   id: '/renda-vulnerabilidade',
   path: '/renda-vulnerabilidade',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/educacao'
     | '/familias'
     | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
     | '/trabalho-renda'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/educacao'
     | '/familias'
     | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
     | '/trabalho-renda'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/educacao'
     | '/familias'
     | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
     | '/trabalho-renda'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
+  PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
   TrabalhoRendaRoute: typeof TrabalhoRendaRoute
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilPopulacaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pessoas-com-deficiencia': {
+      id: '/pessoas-com-deficiencia'
+      path: '/pessoas-com-deficiencia'
+      fullPath: '/pessoas-com-deficiencia'
+      preLoaderRoute: typeof PessoasComDeficienciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/renda-vulnerabilidade': {
       id: '/renda-vulnerabilidade'
       path: '/renda-vulnerabilidade'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
+  PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
   TrabalhoRendaRoute: TrabalhoRendaRoute,
 }
