@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DomiciliosRouteImport } from './routes/domicilios'
+import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DomiciliosRoute = DomiciliosRouteImport.update({
   id: '/domicilios',
   path: '/domicilios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EducacaoRoute = EducacaoRouteImport.update({
+  id: '/educacao',
+  path: '/educacao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FamiliasRoute = FamiliasRouteImport.update({
@@ -44,6 +50,7 @@ const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
@@ -68,6 +77,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/domicilios'
+    | '/educacao'
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
@@ -75,6 +85,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/domicilios'
+    | '/educacao'
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
@@ -82,6 +93,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/domicilios'
+    | '/educacao'
     | '/familias'
     | '/perfil-populacao'
     | '/renda-vulnerabilidade'
@@ -90,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DomiciliosRoute: typeof DomiciliosRoute
+  EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
@@ -109,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/domicilios'
       fullPath: '/domicilios'
       preLoaderRoute: typeof DomiciliosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/educacao': {
+      id: '/educacao'
+      path: '/educacao'
+      fullPath: '/educacao'
+      preLoaderRoute: typeof EducacaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/familias': {
@@ -138,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DomiciliosRoute: DomiciliosRoute,
+  EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
