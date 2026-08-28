@@ -66,21 +66,19 @@ export function BarChartCard({
             />
             <XAxis
               type={isVertical ? "number" : "category"}
-              dataKey={isVertical ? undefined : "label"}
               interval={0}
               height={isVertical ? 30 : 48}
-              tickFormatter={
-                isVertical ? (v: number) => formatValue(v, valueFormat) : undefined
-              }
+              {...(isVertical
+                ? { tickFormatter: (v: number) => formatValue(v, valueFormat) }
+                : { dataKey: "label" })}
               {...axisProps}
             />
             <YAxis
               type={isVertical ? "category" : "number"}
-              dataKey={isVertical ? "label" : undefined}
               width={isVertical ? 140 : 56}
-              tickFormatter={
-                isVertical ? undefined : (v: number) => formatValue(v, valueFormat)
-              }
+              {...(isVertical
+                ? { dataKey: "label" }
+                : { tickFormatter: (v: number) => formatValue(v, valueFormat) })}
               {...axisProps}
             />
 
