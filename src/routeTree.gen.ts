@@ -19,6 +19,7 @@ import { Route as GruposEspecificosRouteImport } from './routes/grupos-especific
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
+import { Route as SituacaoRuaRouteImport } from './routes/situacao-rua'
 import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 
 const IndexRoute = IndexRouteImport.update({
@@ -71,6 +72,11 @@ const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
   path: '/renda-vulnerabilidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SituacaoRuaRoute = SituacaoRuaRouteImport.update({
+  id: '/situacao-rua',
+  path: '/situacao-rua',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
   id: '/trabalho-renda',
   path: '/trabalho-renda',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
+    | '/situacao-rua'
     | '/trabalho-renda'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
+    | '/situacao-rua'
     | '/trabalho-renda'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/renda-vulnerabilidade'
+    | '/situacao-rua'
     | '/trabalho-renda'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
+  SituacaoRuaRoute: typeof SituacaoRuaRoute
   TrabalhoRendaRoute: typeof TrabalhoRendaRoute
 }
 
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RendaVulnerabilidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/situacao-rua': {
+      id: '/situacao-rua'
+      path: '/situacao-rua'
+      fullPath: '/situacao-rua'
+      preLoaderRoute: typeof SituacaoRuaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trabalho-renda': {
       id: '/trabalho-renda'
       path: '/trabalho-renda'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
+  SituacaoRuaRoute: SituacaoRuaRoute,
   TrabalhoRendaRoute: TrabalhoRendaRoute,
 }
 export const routeTree = rootRouteImport
