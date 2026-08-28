@@ -10,13 +10,42 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BeneficiosSociaisRouteImport } from './routes/beneficios-sociais'
+import { Route as CriancasAdolescentesRouteImport } from './routes/criancas-adolescentes'
+import { Route as DomiciliosRouteImport } from './routes/domicilios'
+import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
+import { Route as GruposEspecificosRouteImport } from './routes/grupos-especificos'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
+import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
+import { Route as RedeSocioassistencialRouteImport } from './routes/rede-socioassistencial'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
+import { Route as SituacaoRuaRouteImport } from './routes/situacao-rua'
+import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeneficiosSociaisRoute = BeneficiosSociaisRouteImport.update({
+  id: '/beneficios-sociais',
+  path: '/beneficios-sociais',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriancasAdolescentesRoute = CriancasAdolescentesRouteImport.update({
+  id: '/criancas-adolescentes',
+  path: '/criancas-adolescentes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DomiciliosRoute = DomiciliosRouteImport.update({
+  id: '/domicilios',
+  path: '/domicilios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EducacaoRoute = EducacaoRouteImport.update({
+  id: '/educacao',
+  path: '/educacao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FamiliasRoute = FamiliasRouteImport.update({
@@ -24,9 +53,24 @@ const FamiliasRoute = FamiliasRouteImport.update({
   path: '/familias',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GruposEspecificosRoute = GruposEspecificosRouteImport.update({
+  id: '/grupos-especificos',
+  path: '/grupos-especificos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilPopulacaoRoute = PerfilPopulacaoRouteImport.update({
   id: '/perfil-populacao',
   path: '/perfil-populacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PessoasComDeficienciaRoute = PessoasComDeficienciaRouteImport.update({
+  id: '/pessoas-com-deficiencia',
+  path: '/pessoas-com-deficiencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RedeSocioassistencialRoute = RedeSocioassistencialRouteImport.update({
+  id: '/rede-socioassistencial',
+  path: '/rede-socioassistencial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
@@ -34,44 +78,125 @@ const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
   path: '/renda-vulnerabilidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SituacaoRuaRoute = SituacaoRuaRouteImport.update({
+  id: '/situacao-rua',
+  path: '/situacao-rua',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
+  id: '/trabalho-renda',
+  path: '/trabalho-renda',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
+  '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
+  '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
+  '/domicilios': typeof DomiciliosRoute
+  '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
+  '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
+  '/situacao-rua': typeof SituacaoRuaRoute
+  '/trabalho-renda': typeof TrabalhoRendaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/familias' | '/perfil-populacao' | '/renda-vulnerabilidade'
+  fullPaths:
+    | '/'
+    | '/beneficios-sociais'
+    | '/criancas-adolescentes'
+    | '/domicilios'
+    | '/educacao'
+    | '/familias'
+    | '/grupos-especificos'
+    | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
+    | '/renda-vulnerabilidade'
+    | '/situacao-rua'
+    | '/trabalho-renda'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/familias' | '/perfil-populacao' | '/renda-vulnerabilidade'
+  to:
+    | '/'
+    | '/beneficios-sociais'
+    | '/criancas-adolescentes'
+    | '/domicilios'
+    | '/educacao'
+    | '/familias'
+    | '/grupos-especificos'
+    | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
+    | '/renda-vulnerabilidade'
+    | '/situacao-rua'
+    | '/trabalho-renda'
   id:
     | '__root__'
     | '/'
+    | '/beneficios-sociais'
+    | '/criancas-adolescentes'
+    | '/domicilios'
+    | '/educacao'
     | '/familias'
+    | '/grupos-especificos'
     | '/perfil-populacao'
+    | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
     | '/renda-vulnerabilidade'
+    | '/situacao-rua'
+    | '/trabalho-renda'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BeneficiosSociaisRoute: typeof BeneficiosSociaisRoute
+  CriancasAdolescentesRoute: typeof CriancasAdolescentesRoute
+  DomiciliosRoute: typeof DomiciliosRoute
+  EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
+  GruposEspecificosRoute: typeof GruposEspecificosRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
+  PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
+  RedeSocioassistencialRoute: typeof RedeSocioassistencialRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
+  SituacaoRuaRoute: typeof SituacaoRuaRoute
+  TrabalhoRendaRoute: typeof TrabalhoRendaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -83,11 +208,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/beneficios-sociais': {
+      id: '/beneficios-sociais'
+      path: '/beneficios-sociais'
+      fullPath: '/beneficios-sociais'
+      preLoaderRoute: typeof BeneficiosSociaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criancas-adolescentes': {
+      id: '/criancas-adolescentes'
+      path: '/criancas-adolescentes'
+      fullPath: '/criancas-adolescentes'
+      preLoaderRoute: typeof CriancasAdolescentesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/domicilios': {
+      id: '/domicilios'
+      path: '/domicilios'
+      fullPath: '/domicilios'
+      preLoaderRoute: typeof DomiciliosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/educacao': {
+      id: '/educacao'
+      path: '/educacao'
+      fullPath: '/educacao'
+      preLoaderRoute: typeof EducacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/familias': {
       id: '/familias'
       path: '/familias'
       fullPath: '/familias'
       preLoaderRoute: typeof FamiliasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/grupos-especificos': {
+      id: '/grupos-especificos'
+      path: '/grupos-especificos'
+      fullPath: '/grupos-especificos'
+      preLoaderRoute: typeof GruposEspecificosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/perfil-populacao': {
@@ -97,6 +257,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilPopulacaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pessoas-com-deficiencia': {
+      id: '/pessoas-com-deficiencia'
+      path: '/pessoas-com-deficiencia'
+      fullPath: '/pessoas-com-deficiencia'
+      preLoaderRoute: typeof PessoasComDeficienciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rede-socioassistencial': {
+      id: '/rede-socioassistencial'
+      path: '/rede-socioassistencial'
+      fullPath: '/rede-socioassistencial'
+      preLoaderRoute: typeof RedeSocioassistencialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/renda-vulnerabilidade': {
       id: '/renda-vulnerabilidade'
       path: '/renda-vulnerabilidade'
@@ -104,14 +278,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RendaVulnerabilidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/situacao-rua': {
+      id: '/situacao-rua'
+      path: '/situacao-rua'
+      fullPath: '/situacao-rua'
+      preLoaderRoute: typeof SituacaoRuaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trabalho-renda': {
+      id: '/trabalho-renda'
+      path: '/trabalho-renda'
+      fullPath: '/trabalho-renda'
+      preLoaderRoute: typeof TrabalhoRendaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BeneficiosSociaisRoute: BeneficiosSociaisRoute,
+  CriancasAdolescentesRoute: CriancasAdolescentesRoute,
+  DomiciliosRoute: DomiciliosRoute,
+  EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
+  GruposEspecificosRoute: GruposEspecificosRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
+  PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
+  RedeSocioassistencialRoute: RedeSocioassistencialRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
+  SituacaoRuaRoute: SituacaoRuaRoute,
+  TrabalhoRendaRoute: TrabalhoRendaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

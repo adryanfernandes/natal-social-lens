@@ -64,25 +64,24 @@ export function BarChartCard({
               horizontal={!isVertical}
               vertical={isVertical}
             />
-            {isVertical ? (
-              <>
-                <XAxis
-                  type="number"
-                  {...axisProps}
-                  tickFormatter={(v: number) => formatValue(v, valueFormat)}
-                />
-                <YAxis type="category" dataKey="label" width={140} {...axisProps} />
-              </>
-            ) : (
-              <>
-                <XAxis dataKey="label" interval={0} height={48} {...axisProps} />
-                <YAxis
-                  {...axisProps}
-                  width={56}
-                  tickFormatter={(v: number) => formatValue(v, valueFormat)}
-                />
-              </>
-            )}
+            <XAxis
+              type={isVertical ? "number" : "category"}
+              interval={0}
+              height={isVertical ? 30 : 48}
+              {...(isVertical
+                ? { tickFormatter: (v: number) => formatValue(v, valueFormat) }
+                : { dataKey: "label" })}
+              {...axisProps}
+            />
+            <YAxis
+              type={isVertical ? "category" : "number"}
+              width={isVertical ? 140 : 56}
+              {...(isVertical
+                ? { dataKey: "label" }
+                : { tickFormatter: (v: number) => formatValue(v, valueFormat) })}
+              {...axisProps}
+            />
+
             <Tooltip
               {...chartTooltipStyle}
               formatter={(value) => [formatValue(Number(value), valueFormat), "Total"]}
@@ -91,7 +90,10 @@ export function BarChartCard({
               {data.map((item, index) => (
                 <Cell
                   key={item.label}
-                  fill={multicolor ? chartPalette[index % chartPalette.length] : chartPalette[0]}
+                  fill={
+                    (multicolor ? chartPalette[index % chartPalette.length] : chartPalette[0]) ??
+                    chartPalette[0]!
+                  }
                 />
               ))}
             </Bar>
