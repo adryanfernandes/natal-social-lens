@@ -18,6 +18,7 @@ import { Route as FamiliasRouteImport } from './routes/familias'
 import { Route as GruposEspecificosRouteImport } from './routes/grupos-especificos'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
+import { Route as RedeSocioassistencialRouteImport } from './routes/rede-socioassistencial'
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
 import { Route as SituacaoRuaRouteImport } from './routes/situacao-rua'
 import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
@@ -67,6 +68,11 @@ const PessoasComDeficienciaRoute = PessoasComDeficienciaRouteImport.update({
   path: '/pessoas-com-deficiencia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RedeSocioassistencialRoute = RedeSocioassistencialRouteImport.update({
+  id: '/rede-socioassistencial',
+  path: '/rede-socioassistencial',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RendaVulnerabilidadeRoute = RendaVulnerabilidadeRouteImport.update({
   id: '/renda-vulnerabilidade',
   path: '/renda-vulnerabilidade',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
+  '/rede-socioassistencial': typeof RedeSocioassistencialRoute
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
+    | '/rede-socioassistencial'
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   GruposEspecificosRoute: typeof GruposEspecificosRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
+  RedeSocioassistencialRoute: typeof RedeSocioassistencialRoute
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
   SituacaoRuaRoute: typeof SituacaoRuaRoute
   TrabalhoRendaRoute: typeof TrabalhoRendaRoute
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PessoasComDeficienciaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rede-socioassistencial': {
+      id: '/rede-socioassistencial'
+      path: '/rede-socioassistencial'
+      fullPath: '/rede-socioassistencial'
+      preLoaderRoute: typeof RedeSocioassistencialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/renda-vulnerabilidade': {
       id: '/renda-vulnerabilidade'
       path: '/renda-vulnerabilidade'
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   GruposEspecificosRoute: GruposEspecificosRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
+  RedeSocioassistencialRoute: RedeSocioassistencialRoute,
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
   SituacaoRuaRoute: SituacaoRuaRoute,
   TrabalhoRendaRoute: TrabalhoRendaRoute,
