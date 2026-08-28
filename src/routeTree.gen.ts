@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CriancasAdolescentesRouteImport } from './routes/criancas-adolescentes'
 import { Route as DomiciliosRouteImport } from './routes/domicilios'
 import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
@@ -21,6 +22,11 @@ import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriancasAdolescentesRoute = CriancasAdolescentesRouteImport.update({
+  id: '/criancas-adolescentes',
+  path: '/criancas-adolescentes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DomiciliosRoute = DomiciliosRouteImport.update({
@@ -61,6 +67,7 @@ const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
     | '/familias'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
     | '/familias'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
     | '/familias'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CriancasAdolescentesRoute: typeof CriancasAdolescentesRoute
   DomiciliosRoute: typeof DomiciliosRoute
   EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criancas-adolescentes': {
+      id: '/criancas-adolescentes'
+      path: '/criancas-adolescentes'
+      fullPath: '/criancas-adolescentes'
+      preLoaderRoute: typeof CriancasAdolescentesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/domicilios': {
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CriancasAdolescentesRoute: CriancasAdolescentesRoute,
   DomiciliosRoute: DomiciliosRoute,
   EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
