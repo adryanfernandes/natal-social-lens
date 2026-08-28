@@ -64,25 +64,26 @@ export function BarChartCard({
               horizontal={!isVertical}
               vertical={isVertical}
             />
-            {isVertical ? (
-              <>
-                <XAxis
-                  type="number"
-                  {...axisProps}
-                  tickFormatter={(v: number) => formatValue(v, valueFormat)}
-                />
-                <YAxis type="category" dataKey="label" width={140} {...axisProps} />
-              </>
-            ) : (
-              <>
-                <XAxis dataKey="label" interval={0} height={48} {...axisProps} />
-                <YAxis
-                  {...axisProps}
-                  width={56}
-                  tickFormatter={(v: number) => formatValue(v, valueFormat)}
-                />
-              </>
-            )}
+            <XAxis
+              type={isVertical ? "number" : "category"}
+              dataKey={isVertical ? undefined : "label"}
+              interval={0}
+              height={isVertical ? 30 : 48}
+              tickFormatter={
+                isVertical ? (v: number) => formatValue(v, valueFormat) : undefined
+              }
+              {...axisProps}
+            />
+            <YAxis
+              type={isVertical ? "category" : "number"}
+              dataKey={isVertical ? "label" : undefined}
+              width={isVertical ? 140 : 56}
+              tickFormatter={
+                isVertical ? undefined : (v: number) => formatValue(v, valueFormat)
+              }
+              {...axisProps}
+            />
+
             <Tooltip
               {...chartTooltipStyle}
               formatter={(value) => [formatValue(Number(value), valueFormat), "Total"]}
