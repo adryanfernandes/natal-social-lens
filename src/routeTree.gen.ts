@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BeneficiosSociaisRouteImport } from './routes/beneficios-sociais'
 import { Route as CriancasAdolescentesRouteImport } from './routes/criancas-adolescentes'
 import { Route as DomiciliosRouteImport } from './routes/domicilios'
 import { Route as EducacaoRouteImport } from './routes/educacao'
@@ -22,6 +23,11 @@ import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeneficiosSociaisRoute = BeneficiosSociaisRouteImport.update({
+  id: '/beneficios-sociais',
+  path: '/beneficios-sociais',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CriancasAdolescentesRoute = CriancasAdolescentesRouteImport.update({
@@ -67,6 +73,7 @@ const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
   '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
   '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/beneficios-sociais': typeof BeneficiosSociaisRoute
   '/criancas-adolescentes': typeof CriancasAdolescentesRoute
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/beneficios-sociais'
     | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/beneficios-sociais'
     | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/beneficios-sociais'
     | '/criancas-adolescentes'
     | '/domicilios'
     | '/educacao'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BeneficiosSociaisRoute: typeof BeneficiosSociaisRoute
   CriancasAdolescentesRoute: typeof CriancasAdolescentesRoute
   DomiciliosRoute: typeof DomiciliosRoute
   EducacaoRoute: typeof EducacaoRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beneficios-sociais': {
+      id: '/beneficios-sociais'
+      path: '/beneficios-sociais'
+      fullPath: '/beneficios-sociais'
+      preLoaderRoute: typeof BeneficiosSociaisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/criancas-adolescentes': {
@@ -217,6 +237,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BeneficiosSociaisRoute: BeneficiosSociaisRoute,
   CriancasAdolescentesRoute: CriancasAdolescentesRoute,
   DomiciliosRoute: DomiciliosRoute,
   EducacaoRoute: EducacaoRoute,
