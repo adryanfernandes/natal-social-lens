@@ -1,12 +1,26 @@
 import {
   Accessibility,
   AlertTriangle,
+  Baby,
+  BadgeHelp,
+  Building2,
   CheckCircle2,
+  Clock3,
+  Gift,
+  GraduationCap,
   HandHeart,
+  HeartHandshake,
+  HeartPulse,
   Home,
+  Leaf,
+  MapPinned,
+  Network,
+  Shield,
+  ShieldCheck,
   TrendingUp,
   Users,
   Wallet,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { formatValue, type ValueFormat } from "@/utils/format";
@@ -20,7 +34,22 @@ export type MetricIcon =
   | "accessibility"
   | "alert"
   | "check"
-  | "trending";
+  | "trending"
+  | "baby"
+  | "graduationCap"
+  | "alertTriangle"
+  | "heartHandshake"
+  | "shieldCheck"
+  | "zap"
+  | "gift"
+  | "leaf"
+  | "mapPinned"
+  | "badgeHelp"
+  | "clock3"
+  | "heartPulse"
+  | "network"
+  | "building2"
+  | "shield";
 
 const icons: Record<MetricIcon, LucideIcon> = {
   users: Users,
@@ -31,6 +60,21 @@ const icons: Record<MetricIcon, LucideIcon> = {
   alert: AlertTriangle,
   check: CheckCircle2,
   trending: TrendingUp,
+  baby: Baby,
+  graduationCap: GraduationCap,
+  alertTriangle: AlertTriangle,
+  heartHandshake: HeartHandshake,
+  shieldCheck: ShieldCheck,
+  zap: Zap,
+  gift: Gift,
+  leaf: Leaf,
+  mapPinned: MapPinned,
+  badgeHelp: BadgeHelp,
+  clock3: Clock3,
+  heartPulse: HeartPulse,
+  network: Network,
+  building2: Building2,
+  shield: Shield,
 };
 
 export interface MetricCardProps {

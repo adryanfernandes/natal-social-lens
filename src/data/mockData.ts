@@ -11,6 +11,7 @@ import type {
   SelectOption,
   TerritoryRow,
 } from "@/types/dashboard";
+import { normalizarLocalidade } from "@/utils/localidade";
 
 export const ultimaAtualizacao = "31/07/2026";
 
@@ -35,7 +36,7 @@ export const localidadesOptions: SelectOption[] = [
   { value: "planalto", label: "Planalto" },
   { value: "cidade-nova", label: "Cidade Nova" },
   { value: "ponta-negra", label: "Ponta Negra" },
-];
+].map((option) => ({ ...option, label: normalizarLocalidade(option.label) }));
 
 export const equipamentosOptions: SelectOption[] = [
   { value: "todos", label: "Todos os equipamentos" },
@@ -208,7 +209,7 @@ export const bairrosTop: CategoryDatum[] = [
   { label: "Felipe Camarão", value: 7460 },
   { label: "Pajuçara", value: 6320 },
   { label: "Planalto", value: 5185 },
-];
+].map((item) => ({ ...item, label: normalizarLocalidade(item.label) }));
 
 export const tabelaIndicadores: TerritoryRow[] = [
   {
@@ -283,7 +284,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     beneficiariosPbf: 910,
     pessoasComDeficiencia: 360,
   },
-];
+].map((row) => ({ ...row, localidade: normalizarLocalidade(row.localidade) } as TerritoryRow));
 
 /* ------------------------------------------------------------------ */
 /* Página Famílias                                                     */

@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ModulePlaceholder } from "@/components/dashboard/ModulePlaceholder";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { BarChartCard } from "@/components/dashboard/BarChartCard";
+import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
+import { SectionTitle } from "@/components/dashboard/SectionTitle";
+import { educacaoCards, educacaoSerie, frequenciaEscolar } from "@/data/realData";
 
 export const Route = createFileRoute("/educacao")({
   head: () => ({
@@ -17,18 +21,25 @@ export const Route = createFileRoute("/educacao")({
       },
     ],
   }),
-  component: () => (
-    <ModulePlaceholder
-      title="Educação"
-      plannedIndicators={[
-        "alfabetização",
-        "frequência escolar",
-        "curso frequentado",
-        "série",
-        "grau de instrução",
-        "escolas frequentadas",
-        "escola localizada no município",
-      ]}
-    />
-  ),
+  component: EducacaoPage,
 });
+
+function EducacaoPage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {educacaoCards.map((card) => (
+          <MetricCard key={card.id} label={card.label} value={card.value} hint={card.hint} icon={card.icon} />
+        ))}
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <SectionTitle title="Educação" description="Frequência escolar e graus de instrução da população cadastrada." />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <BarChartCard title="Nível de instrução" description="Distribuição por nível escolar da população." data={frequenciaEscolar} orientation="vertical" multicolor height={300} />
+          <DonutChartCard title="Etapa escolar" description="Etapas de escolarização mais frequentes." data={educacaoSerie} height={300} />
+        </div>
+      </section>
+    </div>
+  );
+}

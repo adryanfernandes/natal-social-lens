@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ModulePlaceholder } from "@/components/dashboard/ModulePlaceholder";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
+import { SectionTitle } from "@/components/dashboard/SectionTitle";
+import { redeCards, redeCobertura } from "@/data/realData";
 
 export const Route = createFileRoute("/rede-socioassistencial")({
   head: () => ({
@@ -17,17 +20,24 @@ export const Route = createFileRoute("/rede-socioassistencial")({
       },
     ],
   }),
-  component: () => (
-    <ModulePlaceholder
-      title="Rede Socioassistencial"
-      plannedIndicators={[
-        "CRAS",
-        "CREAS",
-        "Centro POP",
-        "instituições governamentais",
-        "instituições não governamentais",
-        "hospitais e clínicas",
-      ]}
-    />
-  ),
+  component: RedePage,
 });
+
+function RedePage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {redeCards.map((card) => (
+          <MetricCard key={card.id} label={card.label} value={card.value} hint={card.hint} icon={card.icon} />
+        ))}
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <SectionTitle title="Cobertura da rede" description="Estrutura da assistência social da cidade e serviços vinculados." />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <DonutChartCard title="Equipamentos de atendimento" description="Composição da rede socioassistencial." data={redeCobertura} height={300} />
+        </div>
+      </section>
+    </div>
+  );
+}

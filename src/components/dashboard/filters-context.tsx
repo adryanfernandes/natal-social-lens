@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { emptyFilters, type DashboardFilters, type TerritoryRow } from "@/types/dashboard";
+import { slugLocalidade } from "@/utils/localidade";
 
 interface FiltersContextValue {
   filters: DashboardFilters;
@@ -45,14 +46,9 @@ export function applyFilters(rows: TerritoryRow[], filters: DashboardFilters): T
   return rows.filter((row) => {
     if (filters.regiao !== "todas" && row.regiao !== filters.regiao) return false;
     if (filters.localidade !== "todas") {
-      const slug = row.localidade
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-");
-      if (!slug.includes(filters.localidade.replace(/^nossa-senhora-/, "nossa-senhora-da-"))) {
-        return slug !== filters.localidade ? false : true;
-      }
+      const slug = slugLocalidade(row.localidade);
+      const filtro = slugLocalidade(filters.localidade);
+      if (slug !== filtro && !slug.includes(filtro)) return false;
     }
     return true;
   });

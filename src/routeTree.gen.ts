@@ -15,6 +15,7 @@ import { Route as CriancasAdolescentesRouteImport } from './routes/criancas-adol
 import { Route as DomiciliosRouteImport } from './routes/domicilios'
 import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
+import { Route as FontesDadosRouteImport } from './routes/fontes-dados'
 import { Route as GruposEspecificosRouteImport } from './routes/grupos-especificos'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
@@ -51,6 +52,11 @@ const EducacaoRoute = EducacaoRouteImport.update({
 const FamiliasRoute = FamiliasRouteImport.update({
   id: '/familias',
   path: '/familias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FontesDadosRoute = FontesDadosRouteImport.update({
+  id: '/fontes-dados',
+  path: '/fontes-dados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GruposEspecificosRoute = GruposEspecificosRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/domicilios': typeof DomiciliosRoute
   '/educacao': typeof EducacaoRoute
   '/familias': typeof FamiliasRoute
+  '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/fontes-dados'
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/fontes-dados'
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/domicilios'
     | '/educacao'
     | '/familias'
+    | '/fontes-dados'
     | '/grupos-especificos'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   DomiciliosRoute: typeof DomiciliosRoute
   EducacaoRoute: typeof EducacaoRoute
   FamiliasRoute: typeof FamiliasRoute
+  FontesDadosRoute: typeof FontesDadosRoute
   GruposEspecificosRoute: typeof GruposEspecificosRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/familias'
       fullPath: '/familias'
       preLoaderRoute: typeof FamiliasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fontes-dados': {
+      id: '/fontes-dados'
+      path: '/fontes-dados'
+      fullPath: '/fontes-dados'
+      preLoaderRoute: typeof FontesDadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grupos-especificos': {
@@ -302,6 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   DomiciliosRoute: DomiciliosRoute,
   EducacaoRoute: EducacaoRoute,
   FamiliasRoute: FamiliasRoute,
+  FontesDadosRoute: FontesDadosRoute,
   GruposEspecificosRoute: GruposEspecificosRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,

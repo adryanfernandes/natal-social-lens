@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ModulePlaceholder } from "@/components/dashboard/ModulePlaceholder";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { BarChartCard } from "@/components/dashboard/BarChartCard";
+import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
+import { SectionTitle } from "@/components/dashboard/SectionTitle";
+import { criancasAtendimento, criancasCards, criancasFaixaEtaria } from "@/data/realData";
 
 export const Route = createFileRoute("/criancas-adolescentes")({
   head: () => ({
@@ -17,16 +21,25 @@ export const Route = createFileRoute("/criancas-adolescentes")({
       },
     ],
   }),
-  component: () => (
-    <ModulePlaceholder
-      title="Crianças e Adolescentes"
-      plannedIndicators={[
-        "faixas etárias de 0 a 17 anos",
-        "frequência escolar",
-        "marcação de trabalho infantil",
-        "acompanhamento por serviços da rede",
-        "famílias com crianças beneficiárias do PBF",
-      ]}
-    />
-  ),
+  component: CriancasPage,
 });
+
+function CriancasPage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {criancasCards.map((card) => (
+          <MetricCard key={card.id} label={card.label} value={card.value} hint={card.hint} icon={card.icon} />
+        ))}
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <SectionTitle title="Crianças e adolescentes" description="Distribuição etária e acesso à educação na população jovem cadastrada." />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <BarChartCard title="Faixa etária" description="Pessoas de 0 a 17 anos por faixa etária." data={criancasFaixaEtaria} orientation="vertical" multicolor height={260} />
+          <DonutChartCard title="Modalidade de atendimento" description="Local de escolarização e acesso dos jovens cadastrados." data={criancasAtendimento} height={260} />
+        </div>
+      </section>
+    </div>
+  );
+}

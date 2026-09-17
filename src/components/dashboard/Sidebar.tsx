@@ -4,6 +4,7 @@ import {
   Baby,
   BarChart3,
   Building2,
+  Database,
   GraduationCap,
   HandCoins,
   Home,
@@ -37,6 +38,7 @@ export const navItems: NavItem[] = [
   { to: "/grupos-especificos", label: "Grupos Específicos", icon: UsersRound },
   { to: "/situacao-rua", label: "Situação de Rua", icon: Tent },
   { to: "/rede-socioassistencial", label: "Rede Socioassistencial", icon: Network },
+  { to: "/fontes-dados", label: "Fontes de Dados", icon: Database },
 ];
 
 export interface SidebarProps {
