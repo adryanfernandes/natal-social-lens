@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
-import { redeCards, redeCobertura } from "@/data/realData";
+import { useFilters } from "@/components/dashboard/filters-context";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/rede-socioassistencial")({
   head: () => ({
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/rede-socioassistencial")({
 });
 
 function RedePage() {
+  const { filters } = useFilters();
+  const { data: { redeCards, redeCobertura } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

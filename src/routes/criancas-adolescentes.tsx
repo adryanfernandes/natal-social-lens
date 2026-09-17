@@ -3,7 +3,8 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { BarChartCard } from "@/components/dashboard/BarChartCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
-import { criancasAtendimento, criancasCards, criancasFaixaEtaria } from "@/data/realData";
+import { useFilters } from "@/components/dashboard/filters-context";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/criancas-adolescentes")({
   head: () => ({
@@ -25,6 +26,8 @@ export const Route = createFileRoute("/criancas-adolescentes")({
 });
 
 function CriancasPage() {
+  const { filters } = useFilters();
+  const { data: { criancasAtendimento, criancasCards, criancasFaixaEtaria } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

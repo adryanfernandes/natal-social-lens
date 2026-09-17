@@ -6,17 +6,8 @@ import { IndicatorCard } from "@/components/dashboard/IndicatorCard";
 import { EmptyMapPlaceholder } from "@/components/dashboard/EmptyMapPlaceholder";
 import { DataTable, type DataTableColumn } from "@/components/dashboard/DataTable";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
-import { applyFilters, useFilters } from "@/components/dashboard/filters-context";
-import {
-  bairrosTop,
-  corRaca,
-  distribuicaoSexo,
-  faixaEtaria,
-  faixaRendaFamiliar,
-  indicadoresVulnerabilidade,
-  tabelaIndicadores,
-  visaoGeralCards,
-} from "@/data/mockData";
+import { useFilters } from "@/components/dashboard/filters-context";
+import { useDashboardData } from "@/lib/dashboard-data";
 import { formatValue } from "@/utils/format";
 import type { TerritoryRow } from "@/types/dashboard";
 
@@ -67,7 +58,17 @@ const colunas: DataTableColumn<TerritoryRow>[] = [
 
 function VisaoGeral() {
   const { filters } = useFilters();
-  const rows = applyFilters(tabelaIndicadores, filters);
+  const { data } = useDashboardData(filters);
+  const {
+    bairrosTop,
+    corRaca,
+    distribuicaoSexo,
+    faixaEtaria,
+    faixaRendaFamiliar,
+    indicadoresVulnerabilidade,
+    tabelaIndicadores: rows,
+    visaoGeralCards,
+  } = data;
 
   return (
     <div className="flex flex-col gap-8">

@@ -23,6 +23,7 @@ import { Route as RedeSocioassistencialRouteImport } from './routes/rede-socioas
 import { Route as RendaVulnerabilidadeRouteImport } from './routes/renda-vulnerabilidade'
 import { Route as SituacaoRuaRouteImport } from './routes/situacao-rua'
 import { Route as TrabalhoRendaRouteImport } from './routes/trabalho-renda'
+import { Route as ApiDashboardCubeRouteImport } from './routes/api/dashboard-cube'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const TrabalhoRendaRoute = TrabalhoRendaRouteImport.update({
   path: '/trabalho-renda',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDashboardCubeRoute = ApiDashboardCubeRouteImport.update({
+  id: '/api/dashboard-cube',
+  path: '/api/dashboard-cube',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
+  '/api/dashboard-cube': typeof ApiDashboardCubeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
+  '/api/dashboard-cube': typeof ApiDashboardCubeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/renda-vulnerabilidade': typeof RendaVulnerabilidadeRoute
   '/situacao-rua': typeof SituacaoRuaRoute
   '/trabalho-renda': typeof TrabalhoRendaRoute
+  '/api/dashboard-cube': typeof ApiDashboardCubeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
+    | '/api/dashboard-cube'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
+    | '/api/dashboard-cube'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/renda-vulnerabilidade'
     | '/situacao-rua'
     | '/trabalho-renda'
+    | '/api/dashboard-cube'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   RendaVulnerabilidadeRoute: typeof RendaVulnerabilidadeRoute
   SituacaoRuaRoute: typeof SituacaoRuaRoute
   TrabalhoRendaRoute: typeof TrabalhoRendaRoute
+  ApiDashboardCubeRoute: typeof ApiDashboardCubeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrabalhoRendaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/dashboard-cube': {
+      id: '/api/dashboard-cube'
+      path: '/api/dashboard-cube'
+      fullPath: '/api/dashboard-cube'
+      preLoaderRoute: typeof ApiDashboardCubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   RendaVulnerabilidadeRoute: RendaVulnerabilidadeRoute,
   SituacaoRuaRoute: SituacaoRuaRoute,
   TrabalhoRendaRoute: TrabalhoRendaRoute,
+  ApiDashboardCubeRoute: ApiDashboardCubeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

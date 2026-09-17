@@ -8,13 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { DashboardFilters, SelectOption } from "@/types/dashboard";
-import {
-  equipamentosOptions,
-  faixaRendaOptions,
-  localidadesOptions,
-  pbfOptions,
-  regioesOptions,
-} from "@/data/mockData";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 interface FilterFieldProps {
   label: string;
@@ -55,6 +49,9 @@ export interface FilterBarProps {
  * banco, basta usar o estado de filtros na consulta.
  */
 export function FilterBar({ filters, onChange, onReset }: FilterBarProps) {
+  const { data } = useDashboardData();
+  const { filterOptions } = data;
+
   return (
     <section className="panel p-4 lg:p-5" aria-label="Filtros globais">
       <div className="mb-3 flex items-center gap-2">
@@ -65,31 +62,31 @@ export function FilterBar({ filters, onChange, onReset }: FilterBarProps) {
         <FilterField
           label="Região / Zona"
           value={filters.regiao}
-          options={regioesOptions}
+          options={filterOptions.regioes}
           onChange={(regiao) => onChange({ regiao })}
         />
         <FilterField
           label="Localidade / Bairro"
           value={filters.localidade}
-          options={localidadesOptions}
+          options={filterOptions.localidades}
           onChange={(localidade) => onChange({ localidade })}
         />
         <FilterField
           label="CRAS / CREAS"
           value={filters.equipamento}
-          options={equipamentosOptions}
+          options={filterOptions.equipamentos}
           onChange={(equipamento) => onChange({ equipamento })}
         />
         <FilterField
           label="Faixa de renda per capita"
           value={filters.faixaRenda}
-          options={faixaRendaOptions}
+          options={filterOptions.faixasRenda}
           onChange={(faixaRenda) => onChange({ faixaRenda })}
         />
         <FilterField
           label="Programa Bolsa Família"
           value={filters.pbf}
-          options={pbfOptions}
+          options={filterOptions.pbf}
           onChange={(pbf) => onChange({ pbf: pbf as DashboardFilters["pbf"] })}
         />
       </div>

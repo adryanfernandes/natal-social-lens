@@ -6,11 +6,12 @@ import { FilterBar } from "./FilterBar";
 import { useFilters } from "./filters-context";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ultimaAtualizacao } from "@/data/mockData";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 /** Estrutura visual comum a todas as páginas do observatório. */
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const { filters, setFilters, reset } = useFilters();
+  const { data } = useDashboardData(filters);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -43,7 +44,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         <DashboardHeader
           title="Cadastro Único de Natal/RN"
           subtitle="Painel de indicadores socioeconômicos das famílias e pessoas cadastradas."
-          lastUpdate={ultimaAtualizacao}
+          lastUpdate={data.ultimaAtualizacao}
         />
 
         <main className="flex flex-1 flex-col gap-6 px-4 py-6 lg:px-8 lg:py-8">

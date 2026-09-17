@@ -4,14 +4,8 @@ import { BarChartCard } from "@/components/dashboard/BarChartCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { IndicatorCard } from "@/components/dashboard/IndicatorCard";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
-import {
-  despesasFamiliares,
-  faixaRendaFamiliar,
-  indicadoresVulnerabilidade,
-  pbfDistribuicao,
-  rendaCards,
-  rendaMediaPorRegiao,
-} from "@/data/mockData";
+import { useFilters } from "@/components/dashboard/filters-context";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/renda-vulnerabilidade")({
   head: () => ({
@@ -34,6 +28,9 @@ export const Route = createFileRoute("/renda-vulnerabilidade")({
 });
 
 function RendaPage() {
+  const { filters } = useFilters();
+  const { data } = useDashboardData(filters);
+  const { despesasFamiliares, faixaRendaFamiliar, indicadoresVulnerabilidade, pbfDistribuicao, rendaCards, rendaMediaPorRegiao } = data;
   const destaques = indicadoresVulnerabilidade.filter((item) =>
     ["extrema-pobreza", "pobreza", "inseguranca-alimentar", "violacao-direitos"].includes(item.id),
   );

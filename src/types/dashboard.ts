@@ -39,7 +39,7 @@ export interface TerritoryRow {
 
 export type Regiao = "Norte" | "Sul" | "Leste" | "Oeste";
 
-export type PbfFiltro = "todos" | "beneficiarios" | "nao-beneficiarios";
+export type PbfFiltro = string;
 
 /** Estado dos filtros globais. */
 export interface DashboardFilters {
