@@ -28,6 +28,7 @@ interface CubeRow {
   personPbf: number;
   pcd: number;
   childLabor: number;
+  children: number;
   street: number;
   latestUpdate?: string | null;
   gender: Counter;
@@ -86,6 +87,10 @@ function option(value: string): SelectOption {
   return { value, label: normalizarLocalidade(value) };
 }
 
+function normalizedLabel(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
 function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: string, allLabel: string) {
   const values = [...new Set(rows.map((row) => row.filters[key]).filter((value) => value && value !== "Nao informado"))];
   return [{ value: allValue, label: allLabel }, ...values.sort((a, b) => a.localeCompare(b, "pt-BR")).map(option)];
@@ -116,16 +121,6 @@ function householdBuckets(values: Counter) {
   return result;
 }
 
-function monthBuckets(values: Counter) {
-  const result: Counter = { "Ate 12 meses": 0, "13 a 24 meses": 0, "25 a 36 meses": 0, "Mais de 36 meses": 0 };
-  for (const [label, value] of Object.entries(values)) {
-    const months = Number(label);
-    const bucket = months <= 12 ? "Ate 12 meses" : months <= 24 ? "13 a 24 meses" : months <= 36 ? "25 a 36 meses" : "Mais de 36 meses";
-    result[bucket] = (result[bucket] || 0) + value;
-  }
-  return result;
-}
-
 function derive(allRows: CubeRow[], filters: DashboardFilters) {
   const rows = selected(allRows, filters);
   const persons = sum(rows, "persons");
@@ -134,6 +129,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   const pcd = sum(rows, "pcd");
   const street = sum(rows, "street");
   const childLabor = sum(rows, "childLabor");
+  const children = sum(rows, "children");
   const risk = sum(rows, "risk");
   const foodRisk = sum(rows, "foodRisk");
   const updated24 = sum(rows, "updated24");
@@ -173,7 +169,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   })).sort((a, b) => b.familias - a.familias);
 
   const indicadoresVulnerabilidade: Indicator[] = [
-    { id: "extrema-pobreza", label: "Familias na menor faixa de renda", value: series(faixaRenda).at(-1)?.value || 0, percent: 0, unit: "familias", tone: "critical" },
+    { id: "extrema-pobreza", label: "Familias na menor faixa de renda", value: Object.entries(faixaRenda).find(([label]) => normalizedLabel(label).startsWith("ate"))?.[1] || 0, percent: 0, unit: "familias", tone: "critical" },
     { id: "pobreza", label: "Familias beneficiarias do PBF", value: familyPbf, percent: percent(familyPbf, families), unit: "familias", tone: "alert" },
     { id: "rua", label: "Pessoas em situacao de rua", value: street, percent: percent(street, persons), unit: "pessoas", tone: "critical" },
     { id: "pcd", label: "Pessoas com deficiencia", value: pcd, percent: percent(pcd, persons), unit: "pessoas", tone: "neutral" },
@@ -218,7 +214,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     ],
     familiasPorRegiao: series(regions),
     pessoasPorDomicilio: series(householdBuckets(counter(rows, "householdSize"))),
-    tempoUltimaAtualizacao: series(monthBuckets(counter(rows, "updateMonths"))),
+    tempoUltimaAtualizacao: series(counter(rows, "updateMonths")),
     estadoCadastral: series(counter(rows, "familyStatus")),
     rendaCards: [
       metric("renda-familiar", "Renda media familiar", averageIncome, "Renda total declarada", "wallet", "currency"),
@@ -250,8 +246,8 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     situacaoTrabalho: series(counter(rows, "work")), atividadePrincipal: series(counter(rows, "occupation"), 12),
     deficienciaCards: [metric("pessoas-pcd", "Pessoas com deficiencia", pcd, "Marcacao de deficiencia", "accessibility"), ...series(counter(rows, "disabilities"), 3).map((item, index) => metric(`def-${index}`, item.label, item.value, "Tipo informado", "accessibility"))],
     tipoDeficiencia: series(counter(rows, "disabilities")),
-    criancasCards: [metric("criancas", "Criancas e adolescentes", series(counter(rows, "age")).filter((item) => /0|1[0-7]/.test(item.label)).reduce((a, b) => a + b.value, 0), "Faixas etarias ate 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcacao informada", "alert")],
-    criancasFaixaEtaria: series(counter(rows, "age")).filter((item) => /0|1[0-7]/.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
+    criancasCards: [metric("criancas", "Criancas e adolescentes", children, "Faixas etarias ate 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcacao informada", "alert")],
+    criancasFaixaEtaria: series(counter(rows, "age")).filter((item) => /0 e 4|5 a 6|7 a 15|16 a 17/i.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
     beneficiosCards: [metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"), metric("pessoas-pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio individual informado", "users")],
     beneficiosCobertura: [{ label: "Familias beneficiarias", value: familyPbf }, { label: "Familias nao beneficiarias", value: Math.max(0, families - familyPbf) }],
     gruposCards: [metric("indigena", "Familias indigenas", sum(rows, "indigenous"), "Identificacao informada", "leaf"), metric("quilombola", "Familias quilombolas", sum(rows, "quilombola"), "Identificacao informada", "mapPinned"), metric("grupos", "Grupos especificos", Object.values(counter(rows, "groups")).reduce((a, b) => a + b, 0), "Marcacoes registradas", "users")],

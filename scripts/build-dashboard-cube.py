@@ -1,6 +1,8 @@
 import json
 import os
+import re
 import time
+import unicodedata
 from collections import Counter
 from datetime import date, datetime
 
@@ -10,6 +12,7 @@ import truststore
 
 
 SOURCE_FILE = "2026_BDTrabalhado_10Abril_Karine.xlsx"
+DICTIONARY_FILE = "dicionariotudo.xlsx"
 CUBE_SOURCE = "dashboard_cube_v1"
 BATCH_SIZE = 100
 
@@ -20,6 +23,46 @@ def text(value):
     return str(value).strip()
 
 
+def normalized(value):
+    value = unicodedata.normalize("NFKD", text(value)).encode("ascii", "ignore").decode().lower()
+    return " ".join("".join(char if char.isalnum() else " " for char in value).split())
+
+
+def code(value):
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return text(value)
+
+
+def load_decoders(data_dir, headers):
+    workbook = openpyxl.load_workbook(
+        os.path.join(data_dir, DICTIONARY_FILE), read_only=True, data_only=True
+    )
+    rows = workbook["dicionariotudo"].iter_rows(min_row=2, values_only=True)
+    by_description = {}
+    for _, description, answers in rows:
+        if not description or not answers:
+            continue
+        mapping = {}
+        for item in str(answers).split("#"):
+            match = re.match(r"^\s*([^\-]+?)\s*-\s*(.+?)\s*$", item)
+            if match:
+                mapping[code(match.group(1))] = match.group(2).strip()
+        if mapping:
+            by_description[normalized(description)] = mapping
+    return {
+        index: by_description[normalized(header)]
+        for index, header in enumerate(headers)
+        if normalized(header) in by_description
+    }
+
+
+def decoded(decoders, index, value):
+    if value is None:
+        return "Nao informado"
+    return decoders.get(index, {}).get(code(value), text(value))
+
+
 def number(value):
     try:
         return float(value or 0)
@@ -28,8 +71,8 @@ def number(value):
 
 
 def marked(value):
-    value = text(value).lower()
-    return value not in {"nao", "não", "0", "false", "nao informado", "não informado"}
+    value = normalized(value)
+    return value == "1" or value.startswith("sim") or "opcao marcada" in value
 
 
 def new_stats(filters):
@@ -49,6 +92,7 @@ def new_stats(filters):
         "personPbf": 0,
         "pcd": 0,
         "childLabor": 0,
+        "children": 0,
         "street": 0,
         "gender": Counter(),
         "age": Counter(),
@@ -109,46 +153,49 @@ def main():
     truststore.inject_into_ssl()
     base = os.environ["SUPABASE_URL"].rstrip("/")
     key = os.environ["SUPABASE_SECRET_KEY"]
+    data_dir = os.path.join("src", "data")
     workbook = openpyxl.load_workbook(
-        os.path.join("src", "data", SOURCE_FILE), read_only=True, data_only=True
+        os.path.join(data_dir, SOURCE_FILE), read_only=True, data_only=True
     )
     sheet = workbook["tudo"]
     rows = sheet.iter_rows(values_only=True)
-    next(rows)
+    headers = next(rows)
+    decoders = load_decoders(data_dir, headers)
     cube = {}
 
     for row_number, row in enumerate(rows, start=2):
         values = list(row) + [None] * (169 - len(row))
         filters = {
-            "regiao": text(values[7]),
-            "localidade": text(values[8]),
-            "equipamento": text(values[52]),
-            "faixaRenda": text(values[12]),
-            "pbf": text(values[14]),
+            "regiao": decoded(decoders, 7, values[7]),
+            "localidade": decoded(decoders, 8, values[8]),
+            "equipamento": decoded(decoders, 52, values[52]),
+            "faixaRenda": decoded(decoders, 12, values[12]),
+            "pbf": decoded(decoders, 14, values[14]),
         }
         key_tuple = tuple(filters.values())
         stats = cube.setdefault(key_tuple, new_stats(filters))
         stats["persons"] += 1
-        stats["personPbf"] += int(marked(values[73]))
-        stats["pcd"] += int(marked(values[79]))
-        stats["childLabor"] += int(marked(values[60]))
-        stats["street"] += int(marked(values[121]))
-        add(stats["gender"], values[61])
-        add(stats["age"], values[72])
-        add(stats["race"], values[64])
-        add(stats["relationship"], values[63])
-        add(stats["school"], values[95])
-        add(stats["education"], values[107])
-        add(stats["work"], values[108])
-        add(stats["occupation"], values[111])
+        stats["personPbf"] += int(marked(decoded(decoders, 73, values[73])))
+        stats["pcd"] += int(marked(decoded(decoders, 79, values[79])))
+        stats["childLabor"] += int(marked(decoded(decoders, 60, values[60])))
+        stats["children"] += int(code(values[72]) in {"0", "1", "2", "3"})
+        stats["street"] += int(marked(decoded(decoders, 121, values[121])))
+        add(stats["gender"], decoded(decoders, 61, values[61]))
+        add(stats["age"], decoded(decoders, 72, values[72]))
+        add(stats["race"], decoded(decoders, 64, values[64]))
+        add(stats["relationship"], decoded(decoders, 63, values[63]))
+        add(stats["school"], decoded(decoders, 95, values[95]))
+        add(stats["education"], decoded(decoders, 107, values[107]))
+        add(stats["work"], decoded(decoders, 108, values[108]))
+        add(stats["occupation"], decoded(decoders, 111, values[111]))
 
-        if marked(values[121]):
-            add(stats["streetTime"], values[130])
+        if marked(decoded(decoders, 121, values[121])):
+            add(stats["streetTime"], decoded(decoders, 130, values[130]))
             for index, label in ((122, "Rua"), (124, "Albergue"), (126, "Domicilio particular"), (128, "Outra forma")):
-                if marked(values[index]):
+                if marked(decoded(decoders, index, values[index])):
                     stats["streetSleep"][label] += 1
             for index, label in ((150, "CRAS"), (151, "CREAS"), (152, "Centro POP"), (153, "Instituicao governamental"), (154, "Instituicao nao governamental"), (155, "Hospital ou clinica")):
-                if marked(values[index]):
+                if marked(decoded(decoders, index, values[index])):
                     stats["services"][label] += 1
 
         disability_fields = (
@@ -165,25 +212,32 @@ def main():
         if family_code not in stats["_families"]:
             stats["_families"].add(family_code)
             stats["families"] += 1
-            stats["familyPbf"] += int(marked(values[14]))
+            stats["familyPbf"] += int(marked(decoded(decoders, 14, values[14])))
             stats["incomePerCapita"] += number(values[11])
             stats["incomeTotal"] += number(values[13])
             stats["incomeCount"] += 1
             months = number(values[15])
-            stats["updated24"] += int(months <= 24)
-            stats["risk"] += int(marked(values[54]))
-            stats["foodRisk"] += int(marked(values[55]))
-            stats["indigenous"] += int(marked(values[29]))
-            stats["quilombola"] += int(marked(values[35]))
-            add(stats["familyStatus"], values[4])
+            stats["updated24"] += int(code(values[15]) in {"0", "1", "2"})
+            stats["risk"] += int(marked(decoded(decoders, 54, values[54])))
+            stats["foodRisk"] += int(marked(decoded(decoders, 55, values[55])))
+            stats["indigenous"] += int(marked(decoded(decoders, 29, values[29])))
+            stats["quilombola"] += int(marked(decoded(decoders, 35, values[35])))
+            add(stats["familyStatus"], decoded(decoders, 4, values[4]))
             add(stats["householdSize"], values[38])
-            add(stats["updateMonths"], values[15])
-            add(stats["housingType"], values[17])
+            add(stats["updateMonths"], decoded(decoders, 15, values[15]))
+            add(stats["housingType"], decoded(decoders, 17, values[17]))
             add(stats["rooms"], values[18])
-            add(stats["groups"], values[56])
-            for index, label in ((22, "Agua canalizada"), (24, "Banheiro"), (25, "Esgotamento sanitario"), (26, "Coleta de lixo"), (27, "Iluminacao")):
-                if marked(values[index]):
-                    stats["sanitation"][label] += 1
+            add(stats["groups"], decoded(decoders, 56, values[56]))
+            water = decoded(decoders, 22, values[22])
+            bathroom = decoded(decoders, 24, values[24])
+            sewage = decoded(decoders, 25, values[25])
+            garbage = decoded(decoders, 26, values[26])
+            lighting = decoded(decoders, 27, values[27])
+            if marked(water): stats["sanitation"]["Agua canalizada"] += 1
+            if marked(bathroom): stats["sanitation"]["Banheiro"] += 1
+            if normalized(sewage) in {"rede coletora de esgoto ou pluvial", "fossa septica"}: stats["sanitation"]["Esgotamento adequado"] += 1
+            if normalized(garbage) in {"e coletado diretamente", "e coletado indiretamente"}: stats["sanitation"]["Coleta de lixo"] += 1
+            if normalized(lighting).startswith("eletrica"): stats["sanitation"]["Iluminacao eletrica"] += 1
             for index, label in ((43, "Energia"), (44, "Agua"), (45, "Gas"), (46, "Alimentacao"), (47, "Transporte"), (48, "Aluguel"), (49, "Medicamentos")):
                 if number(values[index]) > 0:
                     stats["expenses"][label] += 1
