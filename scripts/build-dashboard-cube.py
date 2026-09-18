@@ -16,6 +16,73 @@ DICTIONARY_FILE = "dicionariotudo.xlsx"
 CUBE_SOURCE = "dashboard_cube_v1"
 BATCH_SIZE = 100
 
+OFFICIAL_NEIGHBORHOODS = {
+    "ALECRIM": "Alecrim",
+    "AREIA PRETA": "Areia Preta",
+    "BARRO VERMELHO": "Barro Vermelho",
+    "BOM PASTOR": "Bom Pastor",
+    "CANDELARIA": "Candelaria",
+    "CAPIM MACIO": "Capim Macio",
+    "CIDADE ALTA": "Cidade Alta",
+    "CIDADE DA ESPERANCA": "Cidade da Esperanca",
+    "CIDADE NOVA": "Cidade Nova",
+    "DIX SEPT ROSADO": "Dix-Sept Rosado",
+    "FELIPE CAMARAO": "Filipe Camarao",
+    "GUARAPES": "Guarapes",
+    "IGAPO": "Igapo",
+    "JARDIM PROGRESSO": "Jardim Progresso",
+    "LAGOA AZUL": "Lagoa Azul",
+    "LAGOA NOVA": "Lagoa Nova",
+    "LAGOA SECA": "Lagoa Seca",
+    "MAE LUIZA": "Mae Luiza",
+    "NEOPOLIS": "Neopolis",
+    "NORDESTE": "Nordeste",
+    "NOSSA SENHORA DA APRESENTACAO": "Nossa Senhora da Apresentacao",
+    "NOSSA SENHORA DE NAZARE": "Nossa Senhora de Nazare",
+    "NOVA DESCOBERTA": "Nova Descoberta",
+    "PAJUCARA": "Pajucara",
+    "PETROPOLIS": "Petropolis",
+    "PITIMBU": "Pitimbu",
+    "PLANALTO": "Planalto",
+    "PONTA NEGRA": "Ponta Negra",
+    "POTENGI": "Potengi",
+    "PRAIA DO MEIO": "Praia do Meio",
+    "QUINTAS": "Quintas",
+    "REDINHA": "Redinha",
+    "RIBEIRA": "Ribeira",
+    "ROCAS": "Rocas",
+    "SALINAS": "Salinas",
+    "SANTOS REIS": "Santos Reis",
+    "TIROL": "Tirol",
+}
+
+NEIGHBORHOOD_RULES = (
+    (r"APRESENT|\bN\s*S\s*A\b", "NOSSA SENHORA DA APRESENTACAO"),
+    (r"NAZARE", "NOSSA SENHORA DE NAZARE"),
+    (r"ALECR|AECRIM|ALEGRIM|ALENGRIM|ALERIM|ALCRIM|ALENCRIM", "ALECRIM"),
+    (r"AREA PRETA", "AREIA PRETA"),
+    (r"C\s*IDADE (?:DA )?E", "CIDADE DA ESPERANCA"),
+    (r"^NOVA CIDADE$", "CIDADE NOVA"),
+    (r"PET|PEPRO|P[T]?ROPOL", "PETROPOLIS"),
+    (r"DIX.*SEPT|DIA SEPT|DIX DEPT|DIX SEP|DIX SERT|DIX SERPT|^SEPT ROSADO$", "DIX SEPT ROSADO"),
+    (r"NEOP|NOEPO|NEOPO|NEO P", "NEOPOLIS"),
+    (r"GUARAP", "GUARAPES"),
+    (r"IGAP", "IGAPO"),
+    (r"MAE LUIZA", "MAE LUIZA"),
+    (r"FELIPE CAMAR|FILIPE CAMAR", "FELIPE CAMARAO"),
+    (r"NOVA DESC|NOVA DECO|NOVA DESO|NOVA DESCOR", "NOVA DESCOBERTA"),
+    (r"PAJUC|PJUC|PACUC|PACUJ|PAJAC|PAJC|PAJUAC|PAJUA|PAJUR", "PAJUCARA"),
+    (r"LAGOA A?Z", "LAGOA AZUL"),
+    (r"NOR.*DESTE|NODESTE|NOSDESTE|NOREDESTE|NOEDESTE", "NORDESTE"),
+    (r"BARRO VERM|BAIRRO VERM", "BARRO VERMELHO"),
+    (r"SANTO.*REI", "SANTOS REIS"),
+    (r"QUINT|QUIT|QIU|QUNT", "QUINTAS"),
+    (r"PRAI.*MEIO|PRIA.*MEIO|PRAIO.*MEIO", "PRAIA DO MEIO"),
+    (r"POT|POTE|POTR|PONTENG", "POTENGI"),
+    (r"PONTA.*NEG|PONTANEGRA|PONSTA NEG", "PONTA NEGRA"),
+    (r"PIT|PINT", "PITIMBU"),
+)
+
 
 def text(value):
     if value is None or str(value).strip() == "":
@@ -26,6 +93,57 @@ def text(value):
 def normalized(value):
     value = unicodedata.normalize("NFKD", text(value)).encode("ascii", "ignore").decode().lower()
     return " ".join("".join(char if char.isalnum() else " " for char in value).split())
+
+
+def jaro_winkler(left, right):
+    if left == right:
+        return 1.0
+    if not left or not right:
+        return 0.0
+    distance = max(len(left), len(right)) // 2 - 1
+    left_matches = [False] * len(left)
+    right_matches = [False] * len(right)
+    matches = 0
+    for index, char in enumerate(left):
+        start = max(0, index - distance)
+        end = min(index + distance + 1, len(right))
+        for candidate in range(start, end):
+            if right_matches[candidate] or char != right[candidate]:
+                continue
+            left_matches[index] = True
+            right_matches[candidate] = True
+            matches += 1
+            break
+    if not matches:
+        return 0.0
+    left_chars = [char for index, char in enumerate(left) if left_matches[index]]
+    right_chars = [char for index, char in enumerate(right) if right_matches[index]]
+    transpositions = sum(a != b for a, b in zip(left_chars, right_chars)) / 2
+    jaro = (matches / len(left) + matches / len(right) + (matches - transpositions) / matches) / 3
+    prefix = 0
+    for a, b in zip(left[:4], right[:4]):
+        if a != b:
+            break
+        prefix += 1
+    return jaro + prefix * 0.1 * (1 - jaro)
+
+
+def canonical_neighborhood(value):
+    cleaned = normalized(value).upper()
+    if not cleaned or cleaned == "NAO INFORMADO":
+        return "Nao informado"
+    if cleaned in OFFICIAL_NEIGHBORHOODS:
+        return OFFICIAL_NEIGHBORHOODS[cleaned]
+    for pattern, official_key in NEIGHBORHOOD_RULES:
+        if re.search(pattern, cleaned):
+            return OFFICIAL_NEIGHBORHOODS[official_key]
+    best_key, similarity = max(
+        ((candidate, jaro_winkler(cleaned, candidate)) for candidate in OFFICIAL_NEIGHBORHOODS),
+        key=lambda item: item[1],
+    )
+    if similarity >= 0.85:
+        return OFFICIAL_NEIGHBORHOODS[best_key]
+    return text(value).strip()
 
 
 def code(value):
@@ -167,7 +285,7 @@ def main():
         values = list(row) + [None] * (169 - len(row))
         filters = {
             "regiao": decoded(decoders, 7, values[7]),
-            "localidade": decoded(decoders, 8, values[8]),
+            "localidade": canonical_neighborhood(decoded(decoders, 8, values[8])),
             "equipamento": decoded(decoders, 52, values[52]),
             "faixaRenda": decoded(decoders, 12, values[12]),
             "pbf": decoded(decoders, 14, values[14]),
