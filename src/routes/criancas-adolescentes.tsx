@@ -27,7 +27,7 @@ export const Route = createFileRoute("/criancas-adolescentes")({
 
 function CriancasPage() {
   const { filters } = useFilters();
-  const { data: { criancasAtendimento, criancasCards, criancasFaixaEtaria } } = useDashboardData(filters);
+  const { data: { criancasAtendimento, criancasCards, criancasFaixaEtaria, criancasPorZona, trabalhoInfantilPorZona } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -41,6 +41,8 @@ function CriancasPage() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <BarChartCard title="Faixa etária" description="Pessoas de 0 a 17 anos por faixa etária." data={criancasFaixaEtaria} orientation="vertical" multicolor height={260} />
           <DonutChartCard title="Modalidade de atendimento" description="Local de escolarização e acesso dos jovens cadastrados." data={criancasAtendimento} height={260} />
+          <BarChartCard title="Crianças e adolescentes por zona" description="População de até 17 anos cadastrada em cada zona." data={criancasPorZona} orientation="vertical" multicolor height={260} />
+          <BarChartCard title="Trabalho infantil por zona" description="Marcações de trabalho infantil em cada zona." data={trabalhoInfantilPorZona} orientation="vertical" multicolor height={260} />
         </div>
       </section>
     </div>

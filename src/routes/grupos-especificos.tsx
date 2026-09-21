@@ -26,7 +26,7 @@ export const Route = createFileRoute("/grupos-especificos")({
 
 function GruposPage() {
   const { filters } = useFilters();
-  const { data: { gruposCards, gruposTradicionais } } = useDashboardData(filters);
+  const { data: { gruposCards, gruposIndigenasPorZona, gruposPorZona, gruposQuilombolasPorZona, gruposTradicionais } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -46,6 +46,9 @@ function GruposPage() {
             multicolor
             height={Math.max(320, gruposTradicionais.length * 36 + 48)}
           />
+          <BarChartCard title="Grupos específicos por zona" description="Registros de grupos tradicionais em cada zona." data={gruposPorZona} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Famílias indígenas por zona" description="Famílias com identificação indígena em cada zona." data={gruposIndigenasPorZona} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Famílias quilombolas por zona" description="Famílias com identificação quilombola em cada zona." data={gruposQuilombolasPorZona} orientation="vertical" multicolor height={300} />
         </div>
       </section>
     </div>

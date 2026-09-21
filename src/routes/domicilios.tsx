@@ -27,7 +27,7 @@ export const Route = createFileRoute("/domicilios")({
 
 function DomiciliosPage() {
   const { filters } = useFilters();
-  const { data: { domiciliosCards, domiciliosComodos, domiciliosTipo, saneamentoDomiciliar } } = useDashboardData(filters);
+  const { data: { domiciliosCards, domiciliosComodos, domiciliosPessoas, domiciliosTipo, saneamentoDomiciliar } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -48,6 +48,7 @@ function DomiciliosPage() {
           <BarChartCard title="Tipo de domicílio" description="Espécie dos domicílios cadastrados." data={domiciliosTipo} orientation="vertical" multicolor height={300} />
           <BarChartCard title="Quantidade de cômodos" description="Número de cômodos por domicílio." data={domiciliosComodos} height={300} />
           <DonutChartCard title="Saneamento" description="Domicílios com acesso a serviços básicos." data={saneamentoDomiciliar} height={300} />
+          <BarChartCard title="Pessoas por domicílio" description="Quantidade de moradores nos domicílios cadastrados." data={domiciliosPessoas} height={300} />
         </div>
       </section>
     </div>

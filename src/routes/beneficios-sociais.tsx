@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MetricCard } from "@/components/dashboard/MetricCard";
+import { BarChartCard } from "@/components/dashboard/BarChartCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
 import { useFilters } from "@/components/dashboard/filters-context";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/beneficios-sociais")({
 
 function BeneficiosPage() {
   const { filters } = useFilters();
-  const { data: { beneficiosCards, beneficiosCobertura } } = useDashboardData(filters);
+  const { data: { beneficiosCards, beneficiosCobertura, beneficiosFamiliasPorZona, beneficiosPessoasPorZona, beneficiosPorRenda } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -39,6 +40,9 @@ function BeneficiosPage() {
         <SectionTitle title="Cobertura de benefícios" description="Programas de transferência e proteção social presentes no cadastro." />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <DonutChartCard title="Benefícios sociais" description="Cobertura por programa social." data={beneficiosCobertura} height={300} />
+          <BarChartCard title="Famílias beneficiárias por zona" description="Famílias atendidas pelo Bolsa Família em cada zona." data={beneficiosFamiliasPorZona} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Pessoas beneficiárias por zona" description="Pessoas com benefício informado em cada zona." data={beneficiosPessoasPorZona} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Beneficiários por faixa de renda" description="Famílias beneficiárias segundo a renda per capita." data={beneficiosPorRenda} height={300} />
         </div>
       </section>
     </div>

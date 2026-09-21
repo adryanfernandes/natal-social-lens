@@ -27,7 +27,7 @@ export const Route = createFileRoute("/situacao-rua")({
 
 function RuaPage() {
   const { filters } = useFilters();
-  const { data: { ruaCards, ruaDormir, ruaTempo } } = useDashboardData(filters);
+  const { data: { ruaCards, ruaCobertura, ruaDormir, ruaPorZona, ruaTempo } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -41,6 +41,8 @@ function RuaPage() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <BarChartCard title="Tempo na rua" description="Tempo médio em que a pessoa permanece em situação de rua." data={ruaTempo} orientation="vertical" multicolor height={300} />
           <DonutChartCard title="Onde dorme" description="Locais de pernoite da população em rua." data={ruaDormir} height={300} />
+          <DonutChartCard title="Participação nos cadastros" description="Pessoas em situação de rua em relação à população cadastrada." data={ruaCobertura} height={300} />
+          <BarChartCard title="Pessoas em situação de rua por zona" description="Cadastros com situação de rua informada em cada zona." data={ruaPorZona} orientation="vertical" multicolor height={300} />
         </div>
       </section>
     </div>

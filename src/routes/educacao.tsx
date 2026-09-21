@@ -27,7 +27,7 @@ export const Route = createFileRoute("/educacao")({
 
 function EducacaoPage() {
   const { filters } = useFilters();
-  const { data: { educacaoCards, educacaoSerie, frequenciaEscolar } } = useDashboardData(filters);
+  const { data: { educacaoCards, educacaoFaixaEtaria, educacaoPorZona, educacaoSerie, frequenciaEscolar } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -41,6 +41,8 @@ function EducacaoPage() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <BarChartCard title="Nível de instrução" description="Distribuição por nível escolar da população." data={frequenciaEscolar} orientation="vertical" multicolor height={300} />
           <DonutChartCard title="Etapa escolar" description="Etapas de escolarização mais frequentes." data={educacaoSerie} height={300} />
+          <BarChartCard title="Perfil etário" description="Faixas etárias da população considerada nos indicadores educacionais." data={educacaoFaixaEtaria} height={300} />
+          <BarChartCard title="Registros educacionais por zona" description="Pessoas com nível de instrução informado em cada zona." data={educacaoPorZona} orientation="vertical" multicolor height={300} />
         </div>
       </section>
     </div>

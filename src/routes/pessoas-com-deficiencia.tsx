@@ -27,7 +27,7 @@ export const Route = createFileRoute("/pessoas-com-deficiencia")({
 
 function DeficienciaPage() {
   const { filters } = useFilters();
-  const { data: { deficienciaCards, tipoDeficiencia } } = useDashboardData(filters);
+  const { data: { deficienciaCards, deficienciaCobertura, deficienciaPorBairro, deficienciaPorZona, tipoDeficiencia } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -40,6 +40,9 @@ function DeficienciaPage() {
         <SectionTitle title="Deficiências" description="Tipos de deficiência presentes na população cadastrada." />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <BarChartCard title="Tipos de deficiência" description="Classificação principal das pessoas com deficiência." data={tipoDeficiencia} orientation="vertical" multicolor height={320} />
+          <DonutChartCard title="Cobertura na população" description="Participação das pessoas com deficiência entre os cadastros." data={deficienciaCobertura} height={320} />
+          <BarChartCard title="Pessoas com deficiência por zona" description="Cadastros com marcação de deficiência em cada zona." data={deficienciaPorZona} orientation="vertical" multicolor height={320} />
+          <BarChartCard title="Bairros com mais pessoas com deficiência" description="Dez bairros com maior número de cadastros." data={deficienciaPorBairro} orientation="vertical" multicolor height={420} />
         </div>
       </section>
     </div>

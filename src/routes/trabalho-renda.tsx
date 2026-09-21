@@ -27,7 +27,7 @@ export const Route = createFileRoute("/trabalho-renda")({
 
 function TrabalhoRendaPage() {
   const { filters } = useFilters();
-  const { data: { atividadePrincipal, situacaoTrabalho, trabalhoRendaCards } } = useDashboardData(filters);
+  const { data: { atividadePrincipal, situacaoTrabalho, trabalhoPorZona, trabalhoRendaCards, trabalhoRendaPorZona } } = useDashboardData(filters);
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -41,6 +41,8 @@ function TrabalhoRendaPage() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <DonutChartCard title="Situação de trabalho" description="Composição da população por vínculo de trabalho." data={situacaoTrabalho} height={300} />
           <BarChartCard title="Atividade principal" description="Principais setores econômicos de ocupação." data={atividadePrincipal} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Situação de trabalho por zona" description="Pessoas com situação ocupacional informada em cada zona." data={trabalhoPorZona} orientation="vertical" multicolor height={300} />
+          <BarChartCard title="Renda familiar média por zona" description="Renda familiar média declarada em cada zona." data={trabalhoRendaPorZona} orientation="vertical" valueFormat="currency" multicolor height={300} />
         </div>
       </section>
     </div>

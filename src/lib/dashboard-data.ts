@@ -75,6 +75,54 @@ function counter(rows: CubeRow[], key: keyof CubeRow): Counter {
   return result;
 }
 
+function groupedSum(
+  rows: CubeRow[],
+  groupKey: keyof CubeRow["filters"],
+  valueKey: keyof CubeRow,
+): Counter {
+  const result: Counter = {};
+  for (const row of rows) {
+    const group = row.filters[groupKey];
+    result[group] = (result[group] || 0) + Number(row[valueKey] || 0);
+  }
+  return result;
+}
+
+function groupedCounterTotal(
+  rows: CubeRow[],
+  groupKey: keyof CubeRow["filters"],
+  counterKey: keyof CubeRow,
+): Counter {
+  const result: Counter = {};
+  for (const row of rows) {
+    const group = row.filters[groupKey];
+    const total = Object.values((row[counterKey] as Counter) || {}).reduce((sum, value) => sum + value, 0);
+    result[group] = (result[group] || 0) + total;
+  }
+  return result;
+}
+
+function groupedAverage(
+  rows: CubeRow[],
+  groupKey: keyof CubeRow["filters"],
+  totalKey: keyof CubeRow,
+  countKey: keyof CubeRow,
+): Counter {
+  const totals: Counter = {};
+  const counts: Counter = {};
+  for (const row of rows) {
+    const group = row.filters[groupKey];
+    totals[group] = (totals[group] || 0) + Number(row[totalKey] || 0);
+    counts[group] = (counts[group] || 0) + Number(row[countKey] || 0);
+  }
+  return Object.fromEntries(
+    Object.keys(totals).map((group) => {
+      const count = counts[group] ?? 0;
+      return [group, count ? (totals[group] ?? 0) / count : 0];
+    }),
+  );
+}
+
 function series(values: Counter, limit?: number): CategoryDatum[] {
   const result = Object.entries(values)
     .filter(([, value]) => value > 0)
@@ -282,22 +330,43 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     perfilSexo: series(counter(rows, "gender")), perfilFaixaEtaria: ageSeries(counter(rows, "age")), perfilCorRaca: series(counter(rows, "race")), perfilParentesco: series(counter(rows, "relationship"), 10),
     domiciliosCards: [metric("domicilios", "Domicilios cadastrados", families, "Familias na selecao", "home"), ...series(counter(rows, "sanitation"), 3).map((item, index) => metric(`san-${index}`, item.label, item.value, "Condicao declarada", "check"))],
     domiciliosTipo: series(counter(rows, "housingType")), domiciliosComodos: numericSeries(counter(rows, "rooms")), saneamentoDomiciliar: series(counter(rows, "sanitation")),
+    domiciliosPessoas: numericSeries(householdBuckets(counter(rows, "householdSize"))),
     educacaoCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("frequencia", "Situacao escolar informada", Object.values(counter(rows, "school")).reduce((a, b) => a + b, 0), "Registros com situacao escolar", "check")],
     frequenciaEscolar: series(counter(rows, "school")), educacaoSerie: series(counter(rows, "education"), 12),
+    educacaoFaixaEtaria: ageSeries(counter(rows, "age")),
+    educacaoPorZona: series(groupedCounterTotal(rows, "zona", "education")),
     trabalhoRendaCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("trabalho", "Situacao de trabalho informada", Object.values(counter(rows, "work")).reduce((a, b) => a + b, 0), "Registros de trabalho", "check"), metric("renda", "Renda media familiar", averageIncome, "Renda declarada", "wallet", "currency")],
     situacaoTrabalho: series(counter(rows, "work")), atividadePrincipal: series(counter(rows, "occupation"), 12),
+    trabalhoPorZona: series(groupedCounterTotal(rows, "zona", "work")),
+    trabalhoRendaPorZona: series(groupedAverage(rows, "zona", "incomeTotal", "incomeCount")),
     deficienciaCards: [metric("pessoas-pcd", "Pessoas com deficiencia", pcd, "Marcacao de deficiencia", "accessibility"), ...series(counter(rows, "disabilities"), 3).map((item, index) => metric(`def-${index}`, item.label, item.value, "Tipo informado", "accessibility"))],
     tipoDeficiencia: series(counter(rows, "disabilities")),
+    deficienciaCobertura: [{ label: "Pessoas com deficiência", value: pcd }, { label: "Demais pessoas", value: Math.max(0, persons - pcd) }],
+    deficienciaPorZona: series(groupedSum(rows, "zona", "pcd")),
+    deficienciaPorBairro: series(groupedSum(rows, "localidade", "pcd"), 10),
     criancasCards: [metric("criancas", "Criancas e adolescentes", children, "Faixas etarias ate 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcacao informada", "alert")],
     criancasFaixaEtaria: ageSeries(counter(rows, "age")).filter((item) => /0 e 4|5 a 6|7 a 15|16 a 17/i.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
+    criancasPorZona: series(groupedSum(rows, "zona", "children")),
+    trabalhoInfantilPorZona: series(groupedSum(rows, "zona", "childLabor")),
     beneficiosCards: [metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"), metric("pessoas-pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio individual informado", "users")],
     beneficiosCobertura: [{ label: "Familias beneficiarias", value: familyPbf }, { label: "Familias nao beneficiarias", value: Math.max(0, families - familyPbf) }],
+    beneficiosFamiliasPorZona: series(groupedSum(rows, "zona", "familyPbf")),
+    beneficiosPessoasPorZona: series(groupedSum(rows, "zona", "personPbf")),
+    beneficiosPorRenda: incomeSeries(groupedSum(rows, "faixaRenda", "familyPbf")),
     gruposCards: [metric("indigena", "Familias indigenas", sum(rows, "indigenous"), "Identificacao informada", "leaf"), metric("quilombola", "Familias quilombolas", sum(rows, "quilombola"), "Identificacao informada", "mapPinned"), metric("grupos", "Grupos especificos", Object.values(counter(rows, "groups")).reduce((a, b) => a + b, 0), "Marcacoes registradas", "users")],
     gruposTradicionais: series(counter(rows, "groups")),
+    gruposIndigenasPorZona: series(groupedSum(rows, "zona", "indigenous")),
+    gruposQuilombolasPorZona: series(groupedSum(rows, "zona", "quilombola")),
+    gruposPorZona: series(groupedCounterTotal(rows, "zona", "groups")),
     ruaCards: [metric("rua-total", "Pessoas em situacao de rua", street, "Situacao informada", "alertTriangle"), metric("atendimento", "Atendimentos registrados", Object.values(counter(rows, "services")).reduce((a, b) => a + b, 0), "Rede socioassistencial", "heartHandshake")],
     ruaTempo: series(counter(rows, "streetTime")), ruaDormir: series(counter(rows, "streetSleep")),
+    ruaCobertura: [{ label: "Em situação de rua", value: street }, { label: "Demais pessoas", value: Math.max(0, persons - street) }],
+    ruaPorZona: series(groupedSum(rows, "zona", "street")),
     redeCards: series(counter(rows, "services"), 4).map((item, index) => metric(`rede-${index}`, item.label, item.value, "Atendimentos informados", "building2")),
     redeCobertura: series(counter(rows, "services")),
+    redeFamiliasPorEquipamento: series(groupedSum(rows, "equipamento", "families"), 10),
+    redeAtendimentosPorZona: series(groupedCounterTotal(rows, "zona", "services")),
+    redeAtendimentosPorBairro: series(groupedCounterTotal(rows, "localidade", "services"), 10),
   };
 }
 

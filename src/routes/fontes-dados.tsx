@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Database, Filter, Rows3, ShieldCheck } from "lucide-react";
+import { BarChartCard } from "@/components/dashboard/BarChartCard";
+import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
 import { useFilters } from "@/components/dashboard/filters-context";
 import { useDashboardData } from "@/lib/dashboard-data";
@@ -41,6 +43,18 @@ function FontesDadosPage() {
             <p className="mt-2 text-xs text-muted-foreground">{detail}</p>
           </article>
         ))}
+      </section>
+      <section className="flex flex-col gap-4">
+        <SectionTitle
+          title="Cobertura da base"
+          description="Distribuição dos registros agregados disponíveis para análise."
+        />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <BarChartCard title="Famílias por zona" description="Cobertura territorial dos cadastros familiares." data={data.familiasPorRegiao} orientation="vertical" multicolor height={300} />
+          <DonutChartCard title="Pessoas por sexo" description="Distribuição dos registros por sexo declarado." data={data.distribuicaoSexo} height={300} />
+          <BarChartCard title="Pessoas por faixa etária" description="Cobertura dos registros por grupos de idade." data={data.faixaEtaria} height={300} />
+          <BarChartCard title="Famílias por faixa de renda" description="Cobertura dos registros por renda familiar per capita." data={data.faixaRendaFamiliar} height={300} />
+        </div>
       </section>
     </div>
   );
