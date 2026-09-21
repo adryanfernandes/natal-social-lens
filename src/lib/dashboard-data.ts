@@ -83,6 +83,14 @@ function series(values: Counter, limit?: number): CategoryDatum[] {
   return limit ? result.slice(0, limit) : result;
 }
 
+function ageSeries(values: Counter): CategoryDatum[] {
+  return series(values).sort((a, b) => {
+    const firstAge = Number(a.label.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY);
+    const secondAge = Number(b.label.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY);
+    return firstAge - secondAge || a.label.localeCompare(b.label, "pt-BR");
+  });
+}
+
 function option(value: string): SelectOption {
   return { value, label: normalizarLocalidade(value) };
 }
@@ -198,7 +206,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       metric("pcd", "Pessoas com deficiencia", pcd, "Pessoas com marcacao de deficiencia", "accessibility"),
       metric("risco", "Familias em risco social", risk, "Situacoes de risco identificadas", "alert"),
     ],
-    faixaEtaria: series(counter(rows, "age")),
+    faixaEtaria: ageSeries(counter(rows, "age")),
     distribuicaoSexo: series(counter(rows, "gender")),
     corRaca: series(counter(rows, "race")),
     faixaRendaFamiliar: series(faixaRenda),
@@ -237,7 +245,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       metric("pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio informado", "handHeart"),
       metric("rua", "Pessoas em situacao de rua", street, "Situacao informada", "alert"),
     ],
-    perfilSexo: series(counter(rows, "gender")), perfilFaixaEtaria: series(counter(rows, "age")), perfilCorRaca: series(counter(rows, "race")), perfilParentesco: series(counter(rows, "relationship"), 10),
+    perfilSexo: series(counter(rows, "gender")), perfilFaixaEtaria: ageSeries(counter(rows, "age")), perfilCorRaca: series(counter(rows, "race")), perfilParentesco: series(counter(rows, "relationship"), 10),
     domiciliosCards: [metric("domicilios", "Domicilios cadastrados", families, "Familias na selecao", "home"), ...series(counter(rows, "sanitation"), 3).map((item, index) => metric(`san-${index}`, item.label, item.value, "Condicao declarada", "check"))],
     domiciliosTipo: series(counter(rows, "housingType")), domiciliosComodos: series(counter(rows, "rooms")), saneamentoDomiciliar: series(counter(rows, "sanitation")),
     educacaoCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("frequencia", "Situacao escolar informada", Object.values(counter(rows, "school")).reduce((a, b) => a + b, 0), "Registros com situacao escolar", "check")],
@@ -247,7 +255,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     deficienciaCards: [metric("pessoas-pcd", "Pessoas com deficiencia", pcd, "Marcacao de deficiencia", "accessibility"), ...series(counter(rows, "disabilities"), 3).map((item, index) => metric(`def-${index}`, item.label, item.value, "Tipo informado", "accessibility"))],
     tipoDeficiencia: series(counter(rows, "disabilities")),
     criancasCards: [metric("criancas", "Criancas e adolescentes", children, "Faixas etarias ate 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcacao informada", "alert")],
-    criancasFaixaEtaria: series(counter(rows, "age")).filter((item) => /0 e 4|5 a 6|7 a 15|16 a 17/i.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
+    criancasFaixaEtaria: ageSeries(counter(rows, "age")).filter((item) => /0 e 4|5 a 6|7 a 15|16 a 17/i.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
     beneficiosCards: [metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"), metric("pessoas-pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio individual informado", "users")],
     beneficiosCobertura: [{ label: "Familias beneficiarias", value: familyPbf }, { label: "Familias nao beneficiarias", value: Math.max(0, families - familyPbf) }],
     gruposCards: [metric("indigena", "Familias indigenas", sum(rows, "indigenous"), "Identificacao informada", "leaf"), metric("quilombola", "Familias quilombolas", sum(rows, "quilombola"), "Identificacao informada", "mapPinned"), metric("grupos", "Grupos especificos", Object.values(counter(rows, "groups")).reduce((a, b) => a + b, 0), "Marcacoes registradas", "users")],
