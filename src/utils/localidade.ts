@@ -17,12 +17,14 @@ const nomesOficiais: Record<string, string> = {
   "LAGOA NOVA": "Lagoa Nova",
   "LAGOA SECA": "Lagoa Seca",
   "MAE LUIZA": "Mãe Luíza",
+  "MORRO BRANCO": "Morro Branco",
   NEOPOLIS: "Neópolis",
   NORDESTE: "Nordeste",
   "NOSSA SENHORA DA APRESENTACAO": "Nossa Senhora da Apresentação",
   "NOSSA SENHORA DE NAZARE": "Nossa Senhora de Nazaré",
   "NOVA DESCOBERTA": "Nova Descoberta",
   PAJUCARA: "Pajuçara",
+  "PARQUE DAS COLINAS": "Parque das Colinas",
   PETROPOLIS: "Petrópolis",
   PITIMBU: "Pitim\u0062\u00fa",
   PLANALTO: "Planalto",
@@ -79,7 +81,7 @@ export function normalizarLocalidade(value: string): string {
   const texto = limparLocalidade(value);
   const regra = regrasLocalidade.find(([pattern]) => pattern.test(texto));
   const chave = regra?.[1] ?? texto;
-  return nomesOficiais[chave] ?? value.trim().replace(/\s+/g, " ");
+  return (nomesOficiais[chave] ?? value.trim().replace(/\s+/g, " ")).toLocaleUpperCase("pt-BR");
 }
 
 export function slugLocalidade(value: string): string {

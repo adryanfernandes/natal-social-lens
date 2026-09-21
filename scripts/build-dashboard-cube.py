@@ -13,7 +13,7 @@ import truststore
 
 SOURCE_FILE = "2026_BDTrabalhado_10Abril_Karine.xlsx"
 DICTIONARY_FILE = "dicionariotudo.xlsx"
-CUBE_SOURCE = "dashboard_cube_v2"
+CUBE_SOURCE = "dashboard_cube_v3"
 BATCH_SIZE = 100
 
 OFFICIAL_NEIGHBORHOODS = {
@@ -176,17 +176,17 @@ def canonical_neighborhood(value):
     if not cleaned or cleaned == "NAO INFORMADO":
         return "Nao informado"
     if cleaned in OFFICIAL_NEIGHBORHOODS:
-        return OFFICIAL_NEIGHBORHOODS[cleaned]
+        return OFFICIAL_NEIGHBORHOODS[cleaned].upper()
     for pattern, official_key in NEIGHBORHOOD_RULES:
         if re.search(pattern, cleaned):
-            return OFFICIAL_NEIGHBORHOODS[official_key]
+            return OFFICIAL_NEIGHBORHOODS[official_key].upper()
     best_key, similarity = max(
         ((candidate, jaro_winkler(cleaned, candidate)) for candidate in OFFICIAL_NEIGHBORHOODS),
         key=lambda item: item[1],
     )
     if similarity >= 0.85:
-        return OFFICIAL_NEIGHBORHOODS[best_key]
-    return text(value).strip()
+        return OFFICIAL_NEIGHBORHOODS[best_key].upper()
+    return text(value).strip().upper()
 
 
 def neighborhood_zone(value):
