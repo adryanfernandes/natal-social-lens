@@ -39,6 +39,11 @@ export function BarChartCard({
   className,
 }: BarChartCardProps) {
   const isVertical = orientation === "vertical";
+  const longestLabelLength = data.reduce(
+    (length, item) => Math.max(length, item.label.length),
+    0,
+  );
+  const categoryAxisWidth = Math.min(180, Math.max(112, longestLabelLength * 6));
   const axisProps = {
     tick: { fontSize: 11, fill: "var(--color-muted-foreground)" },
     stroke: "var(--color-border)",
@@ -54,7 +59,7 @@ export function BarChartCard({
             margin={
               isVertical
                 ? { top: 4, right: 24, bottom: 4, left: 8 }
-                : { top: 8, right: 8, bottom: 4, left: 0 }
+                : { top: 8, right: 8, bottom: 12, left: 0 }
             }
             barCategoryGap={isVertical ? "22%" : "28%"}
           >
@@ -67,15 +72,20 @@ export function BarChartCard({
             <XAxis
               type={isVertical ? "number" : "category"}
               interval={0}
-              height={isVertical ? 30 : 48}
+              height={isVertical ? 30 : 76}
               {...(isVertical
                 ? { tickFormatter: (v: number) => formatValue(v, valueFormat) }
-                : { dataKey: "label" })}
+                : {
+                    dataKey: "label",
+                    angle: -35,
+                    textAnchor: "end" as const,
+                    tickMargin: 8,
+                  })}
               {...axisProps}
             />
             <YAxis
               type={isVertical ? "category" : "number"}
-              width={isVertical ? 140 : 56}
+              width={isVertical ? categoryAxisWidth : 56}
               {...(isVertical
                 ? { dataKey: "label" }
                 : { tickFormatter: (v: number) => formatValue(v, valueFormat) })}
