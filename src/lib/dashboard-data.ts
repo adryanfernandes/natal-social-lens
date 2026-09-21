@@ -91,6 +91,17 @@ function ageSeries(values: Counter): CategoryDatum[] {
   });
 }
 
+function numericSeries(values: Counter): CategoryDatum[] {
+  return series(values).sort((a, b) => {
+    const firstValue = a.label.match(/\d+/)?.[0];
+    const secondValue = b.label.match(/\d+/)?.[0];
+    if (firstValue && secondValue) return Number(firstValue) - Number(secondValue);
+    if (firstValue) return -1;
+    if (secondValue) return 1;
+    return a.label.localeCompare(b.label, "pt-BR");
+  });
+}
+
 function incomeRangeOrder(label: string) {
   const normalized = normalizedLabel(label);
   if (/nao informado|sem informacao/.test(normalized)) return Number.POSITIVE_INFINITY;
@@ -240,7 +251,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       metric("desatualizado", "Cadastros desatualizados", Math.max(0, families - updated24), "Mais de 24 meses", "alert"),
     ],
     familiasPorRegiao: series(regions),
-    pessoasPorDomicilio: series(householdBuckets(counter(rows, "householdSize"))),
+    pessoasPorDomicilio: numericSeries(householdBuckets(counter(rows, "householdSize"))),
     tempoUltimaAtualizacao: series(counter(rows, "updateMonths")),
     estadoCadastral: series(counter(rows, "familyStatus")),
     rendaCards: [
@@ -266,7 +277,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     ],
     perfilSexo: series(counter(rows, "gender")), perfilFaixaEtaria: ageSeries(counter(rows, "age")), perfilCorRaca: series(counter(rows, "race")), perfilParentesco: series(counter(rows, "relationship"), 10),
     domiciliosCards: [metric("domicilios", "Domicilios cadastrados", families, "Familias na selecao", "home"), ...series(counter(rows, "sanitation"), 3).map((item, index) => metric(`san-${index}`, item.label, item.value, "Condicao declarada", "check"))],
-    domiciliosTipo: series(counter(rows, "housingType")), domiciliosComodos: series(counter(rows, "rooms")), saneamentoDomiciliar: series(counter(rows, "sanitation")),
+    domiciliosTipo: series(counter(rows, "housingType")), domiciliosComodos: numericSeries(counter(rows, "rooms")), saneamentoDomiciliar: series(counter(rows, "sanitation")),
     educacaoCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("frequencia", "Situacao escolar informada", Object.values(counter(rows, "school")).reduce((a, b) => a + b, 0), "Registros com situacao escolar", "check")],
     frequenciaEscolar: series(counter(rows, "school")), educacaoSerie: series(counter(rows, "education"), 12),
     trabalhoRendaCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("trabalho", "Situacao de trabalho informada", Object.values(counter(rows, "work")).reduce((a, b) => a + b, 0), "Registros de trabalho", "check"), metric("renda", "Renda media familiar", averageIncome, "Renda declarada", "wallet", "currency")],
