@@ -49,7 +49,7 @@ export interface FilterBarProps {
  * banco, basta usar o estado de filtros na consulta.
  */
 export function FilterBar({ filters, onChange, onReset }: FilterBarProps) {
-  const { data } = useDashboardData();
+  const { data } = useDashboardData(filters);
   const { filterOptions } = data;
 
   return (
@@ -60,10 +60,10 @@ export function FilterBar({ filters, onChange, onReset }: FilterBarProps) {
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <FilterField
-          label="Região / Zona"
-          value={filters.regiao}
-          options={filterOptions.regioes}
-          onChange={(regiao) => onChange({ regiao })}
+          label="Zona"
+          value={filters.zona}
+          options={filterOptions.zonas}
+          onChange={(zona) => onChange({ zona })}
         />
         <FilterField
           label="Localidade / Bairro"

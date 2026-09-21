@@ -52,7 +52,7 @@ function FamiliasPage() {
         />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <BarChartCard
-            title="Famílias por região de Natal"
+            title="Famílias por zona de Natal"
             description="Total de famílias cadastradas em cada zona da cidade."
             data={familiasPorRegiao}
             orientation="vertical"

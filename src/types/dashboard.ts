@@ -28,7 +28,7 @@ export interface Indicator {
 
 /** Linha agregada por território — base da tabela de indicadores. */
 export interface TerritoryRow {
-  regiao: Regiao;
+  zona: Zona;
   localidade: string;
   familias: number;
   pessoas: number;
@@ -37,13 +37,13 @@ export interface TerritoryRow {
   pessoasComDeficiencia: number;
 }
 
-export type Regiao = "Norte" | "Sul" | "Leste" | "Oeste";
+export type Zona = "Norte" | "Sul" | "Leste" | "Oeste" | "Nao informado";
 
 export type PbfFiltro = string;
 
 /** Estado dos filtros globais. */
 export interface DashboardFilters {
-  regiao: string;
+  zona: string;
   localidade: string;
   equipamento: string;
   faixaRenda: string;
@@ -51,7 +51,7 @@ export interface DashboardFilters {
 }
 
 export const emptyFilters: DashboardFilters = {
-  regiao: "todas",
+  zona: "todas",
   localidade: "todas",
   equipamento: "todos",
   faixaRenda: "todas",

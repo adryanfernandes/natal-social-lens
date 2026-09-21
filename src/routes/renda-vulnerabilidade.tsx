@@ -63,7 +63,7 @@ function RendaPage() {
             height={300}
           />
           <BarChartCard
-            title="Renda média por Região/Zona"
+            title="Renda média por zona"
             description="Renda per capita média declarada em cada zona."
             data={rendaMediaPorRegiao}
             orientation="vertical"

@@ -13,7 +13,7 @@ import truststore
 
 SOURCE_FILE = "2026_BDTrabalhado_10Abril_Karine.xlsx"
 DICTIONARY_FILE = "dicionariotudo.xlsx"
-CUBE_SOURCE = "dashboard_cube_v1"
+CUBE_SOURCE = "dashboard_cube_v2"
 BATCH_SIZE = 100
 
 OFFICIAL_NEIGHBORHOODS = {
@@ -35,12 +35,14 @@ OFFICIAL_NEIGHBORHOODS = {
     "LAGOA NOVA": "Lagoa Nova",
     "LAGOA SECA": "Lagoa Seca",
     "MAE LUIZA": "Mae Luiza",
+    "MORRO BRANCO": "Morro Branco",
     "NEOPOLIS": "Neopolis",
     "NORDESTE": "Nordeste",
     "NOSSA SENHORA DA APRESENTACAO": "Nossa Senhora da Apresentacao",
     "NOSSA SENHORA DE NAZARE": "Nossa Senhora de Nazare",
     "NOVA DESCOBERTA": "Nova Descoberta",
     "PAJUCARA": "Pajucara",
+    "PARQUE DAS COLINAS": "Parque das Colinas",
     "PETROPOLIS": "Petropolis",
     "PITIMBU": "Pitimbu",
     "PLANALTO": "Planalto",
@@ -54,6 +56,47 @@ OFFICIAL_NEIGHBORHOODS = {
     "SALINAS": "Salinas",
     "SANTOS REIS": "Santos Reis",
     "TIROL": "Tirol",
+}
+
+NEIGHBORHOOD_ZONES = {
+    "ALECRIM": "Leste",
+    "AREIA PRETA": "Leste",
+    "BARRO VERMELHO": "Leste",
+    "BOM PASTOR": "Oeste",
+    "CANDELARIA": "Sul",
+    "CAPIM MACIO": "Sul",
+    "CIDADE ALTA": "Leste",
+    "CIDADE DA ESPERANCA": "Oeste",
+    "CIDADE NOVA": "Oeste",
+    "DIX SEPT ROSADO": "Oeste",
+    "FELIPE CAMARAO": "Oeste",
+    "GUARAPES": "Oeste",
+    "IGAPO": "Norte",
+    "LAGOA AZUL": "Norte",
+    "LAGOA NOVA": "Sul",
+    "LAGOA SECA": "Leste",
+    "MAE LUIZA": "Leste",
+    "MORRO BRANCO": "Sul",
+    "NEOPOLIS": "Sul",
+    "NORDESTE": "Oeste",
+    "NOSSA SENHORA DA APRESENTACAO": "Norte",
+    "NOSSA SENHORA DE NAZARE": "Oeste",
+    "NOVA DESCOBERTA": "Sul",
+    "PAJUCARA": "Norte",
+    "PARQUE DAS COLINAS": "Sul",
+    "PETROPOLIS": "Leste",
+    "PITIMBU": "Sul",
+    "PLANALTO": "Oeste",
+    "PONTA NEGRA": "Sul",
+    "POTENGI": "Norte",
+    "PRAIA DO MEIO": "Leste",
+    "QUINTAS": "Oeste",
+    "REDINHA": "Norte",
+    "RIBEIRA": "Leste",
+    "ROCAS": "Leste",
+    "SALINAS": "Norte",
+    "SANTOS REIS": "Leste",
+    "TIROL": "Leste",
 }
 
 NEIGHBORHOOD_RULES = (
@@ -144,6 +187,10 @@ def canonical_neighborhood(value):
     if similarity >= 0.85:
         return OFFICIAL_NEIGHBORHOODS[best_key]
     return text(value).strip()
+
+
+def neighborhood_zone(value):
+    return NEIGHBORHOOD_ZONES.get(normalized(value).upper(), "Nao informado")
 
 
 def code(value):
@@ -283,9 +330,10 @@ def main():
 
     for row_number, row in enumerate(rows, start=2):
         values = list(row) + [None] * (169 - len(row))
+        localidade = canonical_neighborhood(decoded(decoders, 8, values[8]))
         filters = {
-            "regiao": decoded(decoders, 7, values[7]),
-            "localidade": canonical_neighborhood(decoded(decoders, 8, values[8])),
+            "zona": neighborhood_zone(localidade),
+            "localidade": localidade,
             "equipamento": decoded(decoders, 52, values[52]),
             "faixaRenda": decoded(decoders, 12, values[12]),
             "pbf": decoded(decoders, 14, values[14]),

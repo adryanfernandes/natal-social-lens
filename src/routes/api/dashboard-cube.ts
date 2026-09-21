@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const PAGE_SIZE = 1000;
-const SOURCE = "dashboard_cube_v1";
+const SOURCE = "dashboard_cube_v2";
 
 function env(name: string) {
   const value = process.env[name];

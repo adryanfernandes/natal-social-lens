@@ -44,7 +44,7 @@ export function useFilters() {
  */
 export function applyFilters(rows: TerritoryRow[], filters: DashboardFilters): TerritoryRow[] {
   return rows.filter((row) => {
-    if (filters.regiao !== "todas" && row.regiao !== filters.regiao) return false;
+    if (filters.zona !== "todas" && row.zona !== filters.zona) return false;
     if (filters.localidade !== "todas") {
       const slug = slugLocalidade(row.localidade);
       const filtro = slugLocalidade(filters.localidade);

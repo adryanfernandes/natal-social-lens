@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 });
 
 const colunas: DataTableColumn<TerritoryRow>[] = [
-  { key: "regiao", header: "Região" },
+  { key: "zona", header: "Zona" },
   { key: "localidade", header: "Localidade" },
   { key: "familias", header: "Famílias", align: "right", render: (r) => formatValue(r.familias) },
   { key: "pessoas", header: "Pessoas", align: "right", render: (r) => formatValue(r.pessoas) },

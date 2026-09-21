@@ -8,7 +8,7 @@ type Counter = Record<string, number>;
 
 interface CubeRow {
   filters: {
-    regiao: string;
+    zona: string;
     localidade: string;
     equipamento: string;
     faixaRenda: string;
@@ -54,7 +54,7 @@ interface CubeRow {
 }
 
 const emptyFilters: DashboardFilters = {
-  regiao: "todas",
+  zona: "todas",
   localidade: "todas",
   equipamento: "todos",
   faixaRenda: "todas",
@@ -136,7 +136,7 @@ function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: strin
 
 function selected(rows: CubeRow[], filters: DashboardFilters) {
   return rows.filter((row) => {
-    if (filters.regiao !== "todas" && row.filters.regiao !== filters.regiao) return false;
+    if (filters.zona !== "todas" && row.filters.zona !== filters.zona) return false;
     if (filters.localidade !== "todas" && row.filters.localidade !== filters.localidade) return false;
     if (filters.equipamento !== "todos" && row.filters.equipamento !== filters.equipamento) return false;
     if (filters.faixaRenda !== "todas" && row.filters.faixaRenda !== filters.faixaRenda) return false;
@@ -176,17 +176,17 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   const averagePerCapita = incomeCount ? sum(rows, "incomePerCapita") / incomeCount : 0;
 
   const faixaRenda: Counter = {};
-  const regions: Counter = {};
+  const zones: Counter = {};
   const pbf: Counter = {};
   const territory = new Map<string, TerritoryRow>();
   for (const row of rows) {
     faixaRenda[row.filters.faixaRenda] = (faixaRenda[row.filters.faixaRenda] || 0) + row.families;
-    regions[row.filters.regiao] = (regions[row.filters.regiao] || 0) + row.families;
+    zones[row.filters.zona] = (zones[row.filters.zona] || 0) + row.families;
     const pbfLabel = row.familyPbf > 0 ? "Beneficiarios" : "Nao beneficiarios";
     pbf[pbfLabel] = (pbf[pbfLabel] || 0) + row.families;
-    const key = `${row.filters.regiao}|${row.filters.localidade}`;
+    const key = `${row.filters.zona}|${row.filters.localidade}`;
     const current = territory.get(key) || {
-      regiao: row.filters.regiao as TerritoryRow["regiao"],
+      zona: row.filters.zona as TerritoryRow["zona"],
       localidade: normalizarLocalidade(row.filters.localidade),
       familias: 0,
       pessoas: 0,
@@ -219,11 +219,15 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   const metric = (id: string, label: string, value: number, hint: string, icon: MetricIcon, format?: ValueFormat) => ({ id, label, value, hint, icon, ...(format ? { format } : {}) });
   const ultimaAtualizacao = rows.map((row) => row.latestUpdate).filter(Boolean).sort().at(-1) || "Nao informada";
 
+  const localityRows = filters.zona === "todas"
+    ? allRows
+    : allRows.filter((row) => row.filters.zona === filters.zona);
+
   return {
     ultimaAtualizacao,
     filterOptions: {
-      regioes: options(allRows, "regiao", "todas", "Todas as regioes"),
-      localidades: options(allRows, "localidade", "todas", "Todas as localidades"),
+      zonas: options(allRows, "zona", "todas", "Todas as zonas"),
+      localidades: options(localityRows, "localidade", "todas", "Todas as localidades"),
       equipamentos: options(allRows, "equipamento", "todos", "Todos os equipamentos"),
       faixasRenda: options(allRows, "faixaRenda", "todas", "Todas as faixas"),
       pbf: options(allRows, "pbf", "todos", "Todos"),
@@ -250,7 +254,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       metric("atualizado", "Cadastros atualizados", updated24, "Atualizacao em ate 24 meses", "check"),
       metric("desatualizado", "Cadastros desatualizados", Math.max(0, families - updated24), "Mais de 24 meses", "alert"),
     ],
-    familiasPorRegiao: series(regions),
+    familiasPorRegiao: series(zones),
     pessoasPorDomicilio: numericSeries(householdBuckets(counter(rows, "householdSize"))),
     tempoUltimaAtualizacao: series(counter(rows, "updateMonths")),
     estadoCadastral: series(counter(rows, "familyStatus")),
@@ -262,9 +266,9 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"),
     ],
     rendaMediaPorRegiao: tabelaIndicadores.reduce<CategoryDatum[]>((items, row) => {
-      const found = items.find((item) => item.label === row.regiao);
+      const found = items.find((item) => item.label === row.zona);
       if (found) found.value = (found.value + row.rendaPerCapita) / 2;
-      else items.push({ label: row.regiao, value: row.rendaPerCapita });
+      else items.push({ label: row.zona, value: row.rendaPerCapita });
       return items;
     }, []),
     despesasFamiliares: series(counter(rows, "expenses")),

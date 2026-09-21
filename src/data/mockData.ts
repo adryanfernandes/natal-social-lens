@@ -213,7 +213,7 @@ export const bairrosTop: CategoryDatum[] = [
 
 export const tabelaIndicadores: TerritoryRow[] = [
   {
-    regiao: "Norte",
+    zona: "Norte",
     localidade: "Nossa Senhora da Apresentação",
     familias: 9840,
     pessoas: 27310,
@@ -222,7 +222,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 2140,
   },
   {
-    regiao: "Norte",
+    zona: "Norte",
     localidade: "Lagoa Azul",
     familias: 8215,
     pessoas: 22980,
@@ -231,7 +231,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 1810,
   },
   {
-    regiao: "Oeste",
+    zona: "Oeste",
     localidade: "Felipe Camarão",
     familias: 7460,
     pessoas: 20140,
@@ -240,7 +240,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 1620,
   },
   {
-    regiao: "Oeste",
+    zona: "Oeste",
     localidade: "Cidade Nova",
     familias: 4120,
     pessoas: 11380,
@@ -249,7 +249,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 890,
   },
   {
-    regiao: "Sul",
+    zona: "Sul",
     localidade: "Pajuçara",
     familias: 6320,
     pessoas: 17240,
@@ -258,7 +258,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 1240,
   },
   {
-    regiao: "Sul",
+    zona: "Sul",
     localidade: "Ponta Negra",
     familias: 2140,
     pessoas: 5480,
@@ -267,7 +267,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 410,
   },
   {
-    regiao: "Leste",
+    zona: "Leste",
     localidade: "Planalto",
     familias: 5185,
     pessoas: 14120,
@@ -276,7 +276,7 @@ export const tabelaIndicadores: TerritoryRow[] = [
     pessoasComDeficiencia: 1020,
   },
   {
-    regiao: "Leste",
+    zona: "Leste",
     localidade: "Rocas",
     familias: 1890,
     pessoas: 4980,
