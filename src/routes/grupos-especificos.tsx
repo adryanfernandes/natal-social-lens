@@ -38,7 +38,14 @@ function GruposPage() {
       <section className="flex flex-col gap-4">
         <SectionTitle title="Grupos específicos" description="Povos e comunidades tradicionais no Cadastro Único." />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <BarChartCard title="Grupos tradicionais" description="Famílias e pessoas por grupos específicos." data={gruposTradicionais} orientation="vertical" multicolor height={260} />
+          <BarChartCard
+            title="Grupos tradicionais"
+            description="Famílias e pessoas por grupos específicos."
+            data={gruposTradicionais}
+            orientation="vertical"
+            multicolor
+            height={Math.max(320, gruposTradicionais.length * 36 + 48)}
+          />
         </div>
       </section>
     </div>
