@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const PAGE_SIZE = 1000;
-const SOURCE = "dashboard_cube_v3";
+const SOURCE = "dashboard_cube_v4";
 
 function env(name: string) {
   const value = process.env[name];
@@ -26,8 +26,11 @@ async function loadCube() {
     if (!response.ok) {
       throw new Error(`Supabase respondeu ${response.status}: ${await response.text()}`);
     }
-    const page = (await response.json()) as Array<{ data: unknown }>;
-    rows.push(...page.map((row) => row.data));
+    const page = (await response.json()) as Array<{ data: Record<string, unknown> }>;
+    rows.push(...page.map((row) => {
+      const { expenseAmounts: _expenseAmounts, ...dashboardData } = row.data;
+      return dashboardData;
+    }));
     if (page.length < PAGE_SIZE) break;
   }
 

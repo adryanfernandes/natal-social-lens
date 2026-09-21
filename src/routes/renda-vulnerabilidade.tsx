@@ -3,9 +3,10 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { BarChartCard } from "@/components/dashboard/BarChartCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { IndicatorCard } from "@/components/dashboard/IndicatorCard";
+import { ExpenseStatisticsChart } from "@/components/dashboard/ExpenseStatisticsChart";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
 import { useFilters } from "@/components/dashboard/filters-context";
-import { useDashboardData } from "@/lib/dashboard-data";
+import { useDashboardData, useExpenseStatistics } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/renda-vulnerabilidade")({
   head: () => ({
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/renda-vulnerabilidade")({
 function RendaPage() {
   const { filters } = useFilters();
   const { data } = useDashboardData(filters);
+  const { data: despesasEstatisticas } = useExpenseStatistics(filters);
   const { despesasFamiliares, faixaRendaFamiliar, indicadoresVulnerabilidade, pbfDistribuicao, rendaCards, rendaMediaPorRegiao } = data;
   const destaques = indicadoresVulnerabilidade.filter((item) =>
     ["extrema-pobreza", "pobreza", "inseguranca-alimentar", "violacao-direitos"].includes(item.id),
@@ -78,6 +80,7 @@ function RendaPage() {
             orientation="vertical"
             height={320}
           />
+          <ExpenseStatisticsChart data={despesasEstatisticas} />
           <DonutChartCard
             title="Beneficiários e não beneficiários do PBF"
             description="Cobertura do Programa Bolsa Família entre as famílias cadastradas."

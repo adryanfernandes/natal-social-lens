@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { MetricIcon } from "@/components/dashboard/MetricCard";
-import type { CategoryDatum, DashboardFilters, Indicator, SelectOption, TerritoryRow } from "@/types/dashboard";
+import type { CategoryDatum, DashboardFilters, ExpenseStatistics, Indicator, SelectOption, TerritoryRow } from "@/types/dashboard";
 import type { ValueFormat } from "@/utils/format";
 import { normalizarLocalidade } from "@/utils/localidade";
 
@@ -380,6 +380,24 @@ export function useDashboardData(filters: DashboardFilters = emptyFilters) {
   const query = useQuery({ queryKey: ["dashboard-cube"], queryFn: fetchCube, staleTime: 15 * 60 * 1000 });
   return {
     data: derive(query.data || [], filters),
+    loading: query.isLoading,
+    error: query.error instanceof Error ? query.error.message : null,
+  };
+}
+
+export function useExpenseStatistics(filters: DashboardFilters) {
+  const query = useQuery({
+    queryKey: ["expense-statistics", filters],
+    queryFn: async (): Promise<ExpenseStatistics[]> => {
+      const params = new URLSearchParams(Object.entries(filters));
+      const response = await fetch(`/api/expense-statistics?${params}`);
+      if (!response.ok) throw new Error("Nao foi possivel calcular as estatisticas de despesas");
+      return response.json();
+    },
+    staleTime: 15 * 60 * 1000,
+  });
+  return {
+    data: query.data || [],
     loading: query.isLoading,
     error: query.error instanceof Error ? query.error.message : null,
   };

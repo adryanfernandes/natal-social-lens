@@ -13,7 +13,7 @@ import truststore
 
 SOURCE_FILE = "2026_BDTrabalhado_10Abril_Karine.xlsx"
 DICTIONARY_FILE = "dicionariotudo.xlsx"
-CUBE_SOURCE = "dashboard_cube_v3"
+CUBE_SOURCE = "dashboard_cube_v4"
 BATCH_SIZE = 100
 
 OFFICIAL_NEIGHBORHOODS = {
@@ -279,6 +279,7 @@ def new_stats(filters):
         "streetSleep": Counter(),
         "services": Counter(),
         "expenses": Counter(),
+        "expenseAmounts": {},
         "latestUpdate": None,
         "_families": set(),
     }
@@ -405,8 +406,11 @@ def main():
             if normalized(garbage) in {"e coletado diretamente", "e coletado indiretamente"}: stats["sanitation"]["Coleta de lixo"] += 1
             if normalized(lighting).startswith("eletrica"): stats["sanitation"]["Iluminacao eletrica"] += 1
             for index, label in ((43, "Energia"), (44, "Agua"), (45, "Gas"), (46, "Alimentacao"), (47, "Transporte"), (48, "Aluguel"), (49, "Medicamentos")):
-                if number(values[index]) > 0:
+                amount = number(values[index])
+                if amount > 0:
                     stats["expenses"][label] += 1
+                    amounts = stats["expenseAmounts"].setdefault(label, Counter())
+                    amounts[f"{amount:g}"] += 1
             updated = values[3]
             if isinstance(updated, (date, datetime)):
                 updated = updated.isoformat()

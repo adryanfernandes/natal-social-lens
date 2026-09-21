@@ -15,6 +15,16 @@ export interface CategoryDatum {
   percent?: number;
 }
 
+export interface ExpenseStatistics {
+  label: string;
+  count: number;
+  min: number;
+  max: number;
+  mean: number;
+  median: number;
+  distribution: CategoryDatum[];
+}
+
 /** Indicador de destaque (cards de vulnerabilidade). */
 export interface Indicator {
   id: string;
