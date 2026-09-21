@@ -91,6 +91,25 @@ function ageSeries(values: Counter): CategoryDatum[] {
   });
 }
 
+function incomeRangeOrder(label: string) {
+  const normalized = normalizedLabel(label);
+  if (/nao informado|sem informacao/.test(normalized)) return Number.POSITIVE_INFINITY;
+  if (normalized.startsWith("ate")) return 0;
+  if (/acima|mais de|maior que/.test(normalized)) return Number.MAX_SAFE_INTEGER;
+
+  const amount = normalized.match(/(?:r\$\s*)?(\d[\d.,]*)/)?.[1];
+  return amount
+    ? Number(amount.replace(/\.(?=\d{3}(?:\D|$))/g, "").replace(",", "."))
+    : Number.POSITIVE_INFINITY;
+}
+
+function incomeSeries(values: Counter): CategoryDatum[] {
+  return series(values).sort((a, b) =>
+    incomeRangeOrder(a.label) - incomeRangeOrder(b.label)
+    || a.label.localeCompare(b.label, "pt-BR"),
+  );
+}
+
 function option(value: string): SelectOption {
   return { value, label: normalizarLocalidade(value) };
 }
@@ -209,7 +228,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     faixaEtaria: ageSeries(counter(rows, "age")),
     distribuicaoSexo: series(counter(rows, "gender")),
     corRaca: series(counter(rows, "race")),
-    faixaRendaFamiliar: series(faixaRenda),
+    faixaRendaFamiliar: incomeSeries(faixaRenda),
     indicadoresVulnerabilidade,
     bairrosTop: tabelaIndicadores.slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
     tabelaIndicadores,
