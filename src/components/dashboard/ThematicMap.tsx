@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Info, MapPinned } from "lucide-react";
 import { useMemo, useState } from "react";
-import { formatValue, type ValueFormat } from "@/utils/format";
+import { formatCompact, formatValue, type ValueFormat } from "@/utils/format";
 import { normalizarLocalidade } from "@/utils/localidade";
 import type { TerritoryRow } from "@/types/dashboard";
 
@@ -96,6 +96,17 @@ const mapColors = [
   "color-mix(in oklch, var(--color-chart-1) 78%, var(--color-muted))",
   "var(--color-chart-1)",
 ];
+
+const compactCurrency = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+function formatScaleValue(value: number, format?: ValueFormat) {
+  return format === "currency" ? compactCurrency.format(value) : formatCompact(value);
+}
 
 function keyName(value: string) {
   return value
@@ -226,7 +237,7 @@ export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
   const projection = useMemo(() => (data ? buildProjection(data.features) : null), [data]);
   const colorFor = (value: number) => {
     if (!value || !max) return "var(--color-muted)";
-    return mapColors[Math.min(4, Math.floor((value / max) * 5))] ?? mapColors[0]!;
+    return mapColors[Math.min(4, Math.ceil((value / max) * 5) - 1)] ?? mapColors[0]!;
   };
   const activeValue = active
     ? ((level === "bairro" ? neighborhoodValues.get(active) : zoneValues.get(active)) ?? 0)
@@ -344,16 +355,22 @@ export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
             {active ? <p className="text-xs text-muted-foreground">{metric.unit}</p> : null}
           </div>
           <div className="absolute bottom-5 left-5 rounded-md border border-border bg-card/95 p-3 shadow-sm backdrop-blur-sm">
-            <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Menor <span className="float-right ml-12">Maior</span>
-            </p>
-            <div className="flex">
-              {mapColors.map((color) => (
+            <p className="mb-2 text-xs font-medium text-muted-foreground">Escala</p>
+            <div className="grid grid-cols-5">
+              {mapColors.map((color, index) => (
                 <span
                   key={color}
-                  className="h-2.5 w-9 first:rounded-l last:rounded-r"
+                  className="h-2.5 w-11 first:rounded-l last:rounded-r"
                   style={{ backgroundColor: color }}
+                  title={`Até ${formatValue((max * (index + 1)) / mapColors.length, metric.format)}`}
                 />
+              ))}
+            </div>
+            <div className="mt-1 grid grid-cols-5 text-center text-[9px] tabular-nums text-muted-foreground">
+              {mapColors.map((color, index) => (
+                <span key={color}>
+                  {formatScaleValue((max * (index + 1)) / mapColors.length, metric.format)}
+                </span>
               ))}
             </div>
           </div>
@@ -405,7 +422,7 @@ export function FamilyConcentrationMap({ rows }: { rows: TerritoryRow[] }) {
   const activeValue = active ? (values.get(active) ?? 0) : 0;
   const colorFor = (value: number) => {
     if (!value || !max) return "var(--color-muted)";
-    return mapColors[Math.min(4, Math.floor((value / max) * 5))] ?? mapColors[0]!;
+    return mapColors[Math.min(4, Math.ceil((value / max) * 5) - 1)] ?? mapColors[0]!;
   };
 
   return (
@@ -464,18 +481,21 @@ export function FamilyConcentrationMap({ rows }: { rows: TerritoryRow[] }) {
           </p>
         </div>
         <div className="absolute bottom-4 left-4 rounded-md border border-border bg-card/95 p-2 shadow-sm">
-          <div className="flex">
-            {mapColors.map((color) => (
+          <p className="mb-1 text-[10px] font-medium text-muted-foreground">Escala de famílias</p>
+          <div className="grid grid-cols-5">
+            {mapColors.map((color, index) => (
               <span
                 key={color}
-                className="h-2 w-7 first:rounded-l last:rounded-r"
+                className="h-2 w-9 first:rounded-l last:rounded-r"
                 style={{ backgroundColor: color }}
+                title={`Até ${formatValue((max * (index + 1)) / mapColors.length)} famílias`}
               />
             ))}
           </div>
-          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-            <span>Menor</span>
-            <span>Maior</span>
+          <div className="mt-1 grid grid-cols-5 text-center text-[9px] tabular-nums text-muted-foreground">
+            {mapColors.map((color, index) => (
+              <span key={color}>{formatCompact((max * (index + 1)) / mapColors.length)}</span>
+            ))}
           </div>
         </div>
         <p className="absolute bottom-3 right-4 text-[10px] text-muted-foreground">
