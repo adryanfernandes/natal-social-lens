@@ -236,7 +236,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   for (const row of rows) {
     faixaRenda[row.filters.faixaRenda] = (faixaRenda[row.filters.faixaRenda] || 0) + row.families;
     zones[row.filters.zona] = (zones[row.filters.zona] || 0) + row.families;
-    const pbfLabel = row.familyPbf > 0 ? "Beneficiarios" : "Nao beneficiarios";
+    const pbfLabel = row.familyPbf > 0 ? "Beneficiários" : "Não beneficiários";
     pbf[pbfLabel] = (pbf[pbfLabel] || 0) + row.families;
     const localidade = normalizarLocalidade(row.filters.localidade);
     const key = `${row.filters.zona}|${localidade}`;
@@ -278,17 +278,17 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
   })).sort((a, b) => b.familias - a.familias);
 
   const indicadoresVulnerabilidade: Indicator[] = [
-    { id: "extrema-pobreza", label: "Familias na menor faixa de renda", value: Object.entries(faixaRenda).find(([label]) => normalizedLabel(label).startsWith("ate"))?.[1] || 0, percent: 0, unit: "familias", tone: "critical" },
-    { id: "pobreza", label: "Familias beneficiarias do PBF", value: familyPbf, percent: percent(familyPbf, families), unit: "familias", tone: "alert" },
-    { id: "rua", label: "Pessoas em situacao de rua", value: street, percent: percent(street, persons), unit: "pessoas", tone: "critical" },
-    { id: "pcd", label: "Pessoas com deficiencia", value: pcd, percent: percent(pcd, persons), unit: "pessoas", tone: "neutral" },
-    { id: "trabalho-infantil", label: "Marcacao de trabalho infantil", value: childLabor, percent: percent(childLabor, persons), unit: "pessoas", tone: "critical" },
-    { id: "inseguranca-alimentar", label: "Familias em inseguranca alimentar", value: foodRisk, percent: percent(foodRisk, families), unit: "familias", tone: "alert" },
-    { id: "violacao-direitos", label: "Risco por violacao de direitos", value: risk, percent: percent(risk, families), unit: "familias", tone: "alert" },
+    { id: "extrema-pobreza", label: "Famílias na menor faixa de renda", value: Object.entries(faixaRenda).find(([label]) => normalizedLabel(label).startsWith("ate"))?.[1] || 0, percent: 0, unit: "famílias", tone: "critical" },
+    { id: "pobreza", label: "Famílias beneficiárias do PBF", value: familyPbf, percent: percent(familyPbf, families), unit: "famílias", tone: "alert" },
+    { id: "rua", label: "Pessoas em situação de rua", value: street, percent: percent(street, persons), unit: "pessoas", tone: "critical" },
+    { id: "pcd", label: "Pessoas com deficiência", value: pcd, percent: percent(pcd, persons), unit: "pessoas", tone: "neutral" },
+    { id: "trabalho-infantil", label: "Marcação de trabalho infantil", value: childLabor, percent: percent(childLabor, persons), unit: "pessoas", tone: "critical" },
+    { id: "inseguranca-alimentar", label: "Famílias em insegurança alimentar", value: foodRisk, percent: percent(foodRisk, families), unit: "famílias", tone: "alert" },
+    { id: "violacao-direitos", label: "Risco por violação de direitos", value: risk, percent: percent(risk, families), unit: "famílias", tone: "alert" },
   ];
 
   const metric = (id: string, label: string, value: number, hint: string, icon: MetricIcon, format?: ValueFormat) => ({ id, label, value, hint, icon, ...(format ? { format } : {}) });
-  const ultimaAtualizacao = rows.map((row) => row.latestUpdate).filter(Boolean).sort().at(-1) || "Nao informada";
+  const ultimaAtualizacao = rows.map((row) => row.latestUpdate).filter(Boolean).sort().at(-1) || "Não informada";
 
   const localityRows = filters.zona === "todas"
     ? allRows
@@ -304,12 +304,12 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       pbf: options(allRows, "pbf", "todos", "Todos"),
     },
     visaoGeralCards: [
-      metric("pessoas", "Pessoas cadastradas", persons, "Pessoas na selecao atual", "users"),
-      metric("familias", "Familias cadastradas", families, "Nucleos familiares na selecao", "home"),
-      metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"),
-      metric("renda", "Renda media per capita", averagePerCapita, "Media declarada por pessoa/mes", "wallet", "currency"),
-      metric("pcd", "Pessoas com deficiencia", pcd, "Pessoas com marcacao de deficiencia", "accessibility"),
-      metric("risco", "Familias em risco social", risk, "Situacoes de risco identificadas", "alert"),
+      metric("pessoas", "Pessoas cadastradas", persons, "Pessoas na seleção atual", "users"),
+      metric("familias", "Famílias cadastradas", families, "Núcleos familiares na seleção", "home"),
+      metric("pbf", "Famílias beneficiárias do PBF", familyPbf, "Programa Bolsa Família", "handHeart"),
+      metric("renda", "Renda média per capita", averagePerCapita, "Média declarada por pessoa/mês", "wallet", "currency"),
+      metric("pcd", "Pessoas com deficiência", pcd, "Pessoas com marcação de deficiência", "accessibility"),
+      metric("risco", "Famílias em risco social", risk, "Situações de risco identificadas", "alert"),
     ],
     faixaEtaria: ageSeries(counter(rows, "age")),
     distribuicaoSexo: series(counter(rows, "gender")),
@@ -319,10 +319,10 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     bairrosTop: tabelaIndicadores.filter((row) => row.localidade !== "NÃO INFORMADO").slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
     tabelaIndicadores,
     familiasCards: [
-      metric("total", "Total de familias", families, "Cadastros familiares", "home"),
-      metric("media-pessoas", "Media de pessoas por familia", families ? persons / families : 0, "Pessoas por nucleo familiar", "users", "decimal"),
-      metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"),
-      metric("atualizado", "Cadastros atualizados", updated24, "Atualizacao em ate 24 meses", "check"),
+      metric("total", "Total de famílias", families, "Cadastros familiares", "home"),
+      metric("media-pessoas", "Média de pessoas por família", families ? persons / families : 0, "Pessoas por núcleo familiar", "users", "decimal"),
+      metric("pbf", "Famílias beneficiárias do PBF", familyPbf, "Programa Bolsa Família", "handHeart"),
+      metric("atualizado", "Cadastros atualizados", updated24, "Atualização em até 24 meses", "check"),
       metric("desatualizado", "Cadastros desatualizados", Math.max(0, families - updated24), "Mais de 24 meses", "alert"),
     ],
     familiasPorRegiao: series(zones),
@@ -330,11 +330,11 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     tempoUltimaAtualizacao: series(counter(rows, "updateMonths")),
     estadoCadastral: series(counter(rows, "familyStatus")),
     rendaCards: [
-      metric("renda-familiar", "Renda media familiar", averageIncome, "Renda total declarada", "wallet", "currency"),
-      metric("renda-per-capita", "Renda media per capita", averagePerCapita, "Media por pessoa/mes", "trending", "currency"),
-      metric("familias", "Familias na selecao", families, "Total apos os filtros", "home"),
-      metric("risco", "Familias em risco social", risk, "Risco associado a violacao de direitos", "alert"),
-      metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"),
+      metric("renda-familiar", "Renda média familiar", averageIncome, "Renda total declarada", "wallet", "currency"),
+      metric("renda-per-capita", "Renda média per capita", averagePerCapita, "Média por pessoa/mês", "trending", "currency"),
+      metric("familias", "Famílias na seleção", families, "Total após os filtros", "home"),
+      metric("risco", "Famílias em risco social", risk, "Risco associado à violação de direitos", "alert"),
+      metric("pbf", "Famílias beneficiárias do PBF", familyPbf, "Programa Bolsa Família", "handHeart"),
     ],
     rendaMediaPorRegiao: tabelaIndicadores.reduce<CategoryDatum[]>((items, row) => {
       const found = items.find((item) => item.label === row.zona);
@@ -343,45 +343,45 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       return items;
     }, []),
     despesasFamiliares: series(counter(rows, "expenses")),
-    pbfDistribuicao: [{ label: "Beneficiarios", value: familyPbf }, { label: "Nao beneficiarios", value: Math.max(0, families - familyPbf) }],
+    pbfDistribuicao: [{ label: "Beneficiários", value: familyPbf }, { label: "Não beneficiários", value: Math.max(0, families - familyPbf) }],
     perfilPopulacaoCards: [
-      metric("total-pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"),
-      metric("pcd", "Pessoas com deficiencia", pcd, "Marcacao de deficiencia", "accessibility"),
-      metric("pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio informado", "handHeart"),
-      metric("rua", "Pessoas em situacao de rua", street, "Situacao informada", "alert"),
+      metric("total-pessoas", "Pessoas cadastradas", persons, "Total na seleção", "users"),
+      metric("pcd", "Pessoas com deficiência", pcd, "Marcação de deficiência", "accessibility"),
+      metric("pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Benefício informado", "handHeart"),
+      metric("rua", "Pessoas em situação de rua", street, "Situação informada", "alert"),
     ],
     perfilSexo: series(counter(rows, "gender")), perfilFaixaEtaria: ageSeries(counter(rows, "age")), perfilCorRaca: series(counter(rows, "race")), perfilParentesco: series(counter(rows, "relationship"), 10),
-    domiciliosCards: [metric("domicilios", "Domicilios cadastrados", families, "Familias na selecao", "home"), ...series(counter(rows, "sanitation"), 3).map((item, index) => metric(`san-${index}`, item.label, item.value, "Condicao declarada", "check"))],
+    domiciliosCards: [metric("domicilios", "Domicílios cadastrados", families, "Famílias na seleção", "home"), ...series(counter(rows, "sanitation"), 3).map((item, index) => metric(`san-${index}`, item.label, item.value, "Condição declarada", "check"))],
     domiciliosTipo: series(counter(rows, "housingType")), domiciliosComodos: numericSeries(counter(rows, "rooms")), saneamentoDomiciliar: series(counter(rows, "sanitation")),
     domiciliosPessoas: numericSeries(householdBuckets(counter(rows, "householdSize"))),
-    educacaoCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("frequencia", "Situacao escolar informada", Object.values(counter(rows, "school")).reduce((a, b) => a + b, 0), "Registros com situacao escolar", "check")],
+    educacaoCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na seleção", "users"), metric("frequencia", "Situação escolar informada", Object.values(counter(rows, "school")).reduce((a, b) => a + b, 0), "Registros com situação escolar", "check")],
     frequenciaEscolar: series(counter(rows, "school")), educacaoSerie: series(counter(rows, "education"), 12),
     educacaoFaixaEtaria: ageSeries(counter(rows, "age")),
     educacaoPorZona: series(groupedCounterTotal(rows, "zona", "education")),
-    trabalhoRendaCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na selecao", "users"), metric("trabalho", "Situacao de trabalho informada", Object.values(counter(rows, "work")).reduce((a, b) => a + b, 0), "Registros de trabalho", "check"), metric("renda", "Renda media familiar", averageIncome, "Renda declarada", "wallet", "currency")],
+    trabalhoRendaCards: [metric("pessoas", "Pessoas cadastradas", persons, "Total na seleção", "users"), metric("trabalho", "Situação de trabalho informada", Object.values(counter(rows, "work")).reduce((a, b) => a + b, 0), "Registros de trabalho", "check"), metric("renda", "Renda média familiar", averageIncome, "Renda declarada", "wallet", "currency")],
     situacaoTrabalho: series(counter(rows, "work")), atividadePrincipal: series(counter(rows, "occupation"), 12),
     trabalhoPorZona: series(groupedCounterTotal(rows, "zona", "work")),
     trabalhoRendaPorZona: series(groupedAverage(rows, "zona", "incomeTotal", "incomeCount")),
-    deficienciaCards: [metric("pessoas-pcd", "Pessoas com deficiencia", pcd, "Marcacao de deficiencia", "accessibility"), ...series(counter(rows, "disabilities"), 3).map((item, index) => metric(`def-${index}`, item.label, item.value, "Tipo informado", "accessibility"))],
+    deficienciaCards: [metric("pessoas-pcd", "Pessoas com deficiência", pcd, "Marcação de deficiência", "accessibility"), ...series(counter(rows, "disabilities"), 3).map((item, index) => metric(`def-${index}`, item.label, item.value, "Tipo informado", "accessibility"))],
     tipoDeficiencia: series(counter(rows, "disabilities")),
     deficienciaCobertura: [{ label: "Pessoas com deficiência", value: pcd }, { label: "Demais pessoas", value: Math.max(0, persons - pcd) }],
     deficienciaPorZona: series(groupedSum(rows, "zona", "pcd")),
     deficienciaPorBairro: series(groupedSum(rows, "localidade", "pcd"), 10),
-    criancasCards: [metric("criancas", "Criancas e adolescentes", children, "Faixas etarias ate 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcacao informada", "alert")],
+    criancasCards: [metric("criancas", "Crianças e adolescentes", children, "Faixas etárias até 17 anos", "baby"), metric("trabalho-infantil", "Trabalho infantil", childLabor, "Marcação informada", "alert")],
     criancasFaixaEtaria: ageSeries(counter(rows, "age")).filter((item) => /0 e 4|5 a 6|7 a 15|16 a 17/i.test(item.label)), criancasAtendimento: series(counter(rows, "school")),
     criancasPorZona: series(groupedSum(rows, "zona", "children")),
     trabalhoInfantilPorZona: series(groupedSum(rows, "zona", "childLabor")),
-    beneficiosCards: [metric("pbf", "Familias beneficiarias do PBF", familyPbf, "Programa Bolsa Familia", "handHeart"), metric("pessoas-pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Beneficio individual informado", "users")],
-    beneficiosCobertura: [{ label: "Familias beneficiarias", value: familyPbf }, { label: "Familias nao beneficiarias", value: Math.max(0, families - familyPbf) }],
+    beneficiosCards: [metric("pbf", "Famílias beneficiárias do PBF", familyPbf, "Programa Bolsa Família", "handHeart"), metric("pessoas-pbf", "Pessoas que recebem PBF", sum(rows, "personPbf"), "Benefício individual informado", "users")],
+    beneficiosCobertura: [{ label: "Famílias beneficiárias", value: familyPbf }, { label: "Famílias não beneficiárias", value: Math.max(0, families - familyPbf) }],
     beneficiosFamiliasPorZona: series(groupedSum(rows, "zona", "familyPbf")),
     beneficiosPessoasPorZona: series(groupedSum(rows, "zona", "personPbf")),
     beneficiosPorRenda: incomeSeries(groupedSum(rows, "faixaRenda", "familyPbf")),
-    gruposCards: [metric("indigena", "Familias indigenas", sum(rows, "indigenous"), "Identificacao informada", "leaf"), metric("quilombola", "Familias quilombolas", sum(rows, "quilombola"), "Identificacao informada", "mapPinned"), metric("grupos", "Grupos especificos", Object.values(counter(rows, "groups")).reduce((a, b) => a + b, 0), "Marcacoes registradas", "users")],
+    gruposCards: [metric("indigena", "Famílias indígenas", sum(rows, "indigenous"), "Identificação informada", "leaf"), metric("quilombola", "Famílias quilombolas", sum(rows, "quilombola"), "Identificação informada", "mapPinned"), metric("grupos", "Grupos específicos", Object.values(counter(rows, "groups")).reduce((a, b) => a + b, 0), "Marcações registradas", "users")],
     gruposTradicionais: series(counter(rows, "groups")),
     gruposIndigenasPorZona: series(groupedSum(rows, "zona", "indigenous")),
     gruposQuilombolasPorZona: series(groupedSum(rows, "zona", "quilombola")),
     gruposPorZona: series(groupedCounterTotal(rows, "zona", "groups")),
-    ruaCards: [metric("rua-total", "Pessoas em situacao de rua", street, "Situacao informada", "alertTriangle"), metric("atendimento", "Atendimentos registrados", Object.values(counter(rows, "services")).reduce((a, b) => a + b, 0), "Rede socioassistencial", "heartHandshake")],
+    ruaCards: [metric("rua-total", "Pessoas em situação de rua", street, "Situação informada", "alertTriangle"), metric("atendimento", "Atendimentos registrados", Object.values(counter(rows, "services")).reduce((a, b) => a + b, 0), "Rede socioassistencial", "heartHandshake")],
     ruaTempo: series(counter(rows, "streetTime")), ruaDormir: series(counter(rows, "streetSleep")),
     ruaCobertura: [{ label: "Em situação de rua", value: street }, { label: "Demais pessoas", value: Math.max(0, persons - street) }],
     ruaPorZona: series(groupedSum(rows, "zona", "street")),
@@ -395,7 +395,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
 
 async function fetchCube(): Promise<CubeRow[]> {
   const response = await fetch("/api/dashboard-cube");
-  if (!response.ok) throw new Error("Nao foi possivel carregar os dados do Supabase");
+  if (!response.ok) throw new Error("Não foi possível carregar os dados do Supabase");
   return response.json();
 }
 
@@ -414,7 +414,7 @@ export function useExpenseStatistics(filters: DashboardFilters) {
     queryFn: async (): Promise<ExpenseStatistics[]> => {
       const params = new URLSearchParams(Object.entries(filters));
       const response = await fetch(`/api/expense-statistics?${params}`);
-      if (!response.ok) throw new Error("Nao foi possivel calcular as estatisticas de despesas");
+      if (!response.ok) throw new Error("Não foi possível calcular as estatísticas de despesas");
       return response.json();
     },
     staleTime: 15 * 60 * 1000,

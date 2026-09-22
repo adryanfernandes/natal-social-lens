@@ -22,7 +22,7 @@ function FontesDadosPage() {
   const people = data.visaoGeralCards.find((card) => card.id === "pessoas")?.value || 0;
   const items = [
     { label: "Origem", value: "Supabase", detail: "Tabela privada excel_rows", icon: Database },
-    { label: "Registros na selecao", value: people.toLocaleString("pt-BR"), detail: "Dados agregados, sem identificadores", icon: Rows3 },
+    { label: "Registros na seleção", value: people.toLocaleString("pt-BR"), detail: "Dados agregados, sem identificadores", icon: Rows3 },
     { label: "Filtros da base", value: "5 dimensoes", detail: "Zona, localidade, equipamento, renda e PBF", icon: Filter },
     { label: "Protecao", value: "RLS ativo", detail: "A chave secreta permanece no servidor", icon: ShieldCheck },
   ];
