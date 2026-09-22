@@ -241,12 +241,28 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
       rendaPerCapita: 0,
       beneficiariosPbf: 0,
       pessoasComDeficiencia: 0,
+      pessoasSituacaoRua: 0,
+      criancasAdolescentes: 0,
+      trabalhoInfantil: 0,
+      familiasRiscoSocial: 0,
+      insegurancaAlimentar: 0,
+      familiasIndigenas: 0,
+      familiasQuilombolas: 0,
+      cadastrosAtualizados: 0,
     };
     current.familias += row.families;
     current.pessoas += row.persons;
     current.rendaPerCapita += row.incomePerCapita;
     current.beneficiariosPbf += row.familyPbf;
     current.pessoasComDeficiencia += row.pcd;
+    current.pessoasSituacaoRua += row.street;
+    current.criancasAdolescentes += row.children;
+    current.trabalhoInfantil += row.childLabor;
+    current.familiasRiscoSocial += row.risk;
+    current.insegurancaAlimentar += row.foodRisk;
+    current.familiasIndigenas += row.indigenous;
+    current.familiasQuilombolas += row.quilombola;
+    current.cadastrosAtualizados += row.updated24;
     territory.set(key, current);
   }
   const tabelaIndicadores = [...territory.values()].map((row) => ({

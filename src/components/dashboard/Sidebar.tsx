@@ -9,6 +9,7 @@ import {
   HandCoins,
   Home,
   LayoutDashboard,
+  Map,
   Network,
   Tent,
   Users,
@@ -26,6 +27,7 @@ export interface NavItem {
 /** Menu único da aplicação — adicione novos módulos aqui. */
 export const navItems: NavItem[] = [
   { to: "/", label: "Visão Geral", icon: LayoutDashboard },
+  { to: "/mapas", label: "Mapas", icon: Map },
   { to: "/familias", label: "Famílias", icon: Home },
   { to: "/perfil-populacao", label: "Perfil da População", icon: Users },
   { to: "/renda-vulnerabilidade", label: "Renda e Vulnerabilidade", icon: Wallet },

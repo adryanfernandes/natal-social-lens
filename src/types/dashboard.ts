@@ -45,6 +45,14 @@ export interface TerritoryRow {
   rendaPerCapita: number;
   beneficiariosPbf: number;
   pessoasComDeficiencia: number;
+  pessoasSituacaoRua: number;
+  criancasAdolescentes: number;
+  trabalhoInfantil: number;
+  familiasRiscoSocial: number;
+  insegurancaAlimentar: number;
+  familiasIndigenas: number;
+  familiasQuilombolas: number;
+  cadastrosAtualizados: number;
 }
 
 export type Zona = "Norte" | "Sul" | "Leste" | "Oeste" | "Nao informado";

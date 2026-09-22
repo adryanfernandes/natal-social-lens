@@ -17,6 +17,7 @@ import { Route as EducacaoRouteImport } from './routes/educacao'
 import { Route as FamiliasRouteImport } from './routes/familias'
 import { Route as FontesDadosRouteImport } from './routes/fontes-dados'
 import { Route as GruposEspecificosRouteImport } from './routes/grupos-especificos'
+import { Route as MapasRouteImport } from './routes/mapas'
 import { Route as PerfilPopulacaoRouteImport } from './routes/perfil-populacao'
 import { Route as PessoasComDeficienciaRouteImport } from './routes/pessoas-com-deficiencia'
 import { Route as RedeSocioassistencialRouteImport } from './routes/rede-socioassistencial'
@@ -64,6 +65,11 @@ const FontesDadosRoute = FontesDadosRouteImport.update({
 const GruposEspecificosRoute = GruposEspecificosRouteImport.update({
   id: '/grupos-especificos',
   path: '/grupos-especificos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapasRoute = MapasRouteImport.update({
+  id: '/mapas',
+  path: '/mapas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerfilPopulacaoRoute = PerfilPopulacaoRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/familias': typeof FamiliasRoute
   '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
+  '/mapas': typeof MapasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/rede-socioassistencial': typeof RedeSocioassistencialRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/familias': typeof FamiliasRoute
   '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
+  '/mapas': typeof MapasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/rede-socioassistencial': typeof RedeSocioassistencialRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/familias': typeof FamiliasRoute
   '/fontes-dados': typeof FontesDadosRoute
   '/grupos-especificos': typeof GruposEspecificosRoute
+  '/mapas': typeof MapasRoute
   '/perfil-populacao': typeof PerfilPopulacaoRoute
   '/pessoas-com-deficiencia': typeof PessoasComDeficienciaRoute
   '/rede-socioassistencial': typeof RedeSocioassistencialRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/fontes-dados'
     | '/grupos-especificos'
+    | '/mapas'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/rede-socioassistencial'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/fontes-dados'
     | '/grupos-especificos'
+    | '/mapas'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/rede-socioassistencial'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/familias'
     | '/fontes-dados'
     | '/grupos-especificos'
+    | '/mapas'
     | '/perfil-populacao'
     | '/pessoas-com-deficiencia'
     | '/rede-socioassistencial'
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   FamiliasRoute: typeof FamiliasRoute
   FontesDadosRoute: typeof FontesDadosRoute
   GruposEspecificosRoute: typeof GruposEspecificosRoute
+  MapasRoute: typeof MapasRoute
   PerfilPopulacaoRoute: typeof PerfilPopulacaoRoute
   PessoasComDeficienciaRoute: typeof PessoasComDeficienciaRoute
   RedeSocioassistencialRoute: typeof RedeSocioassistencialRoute
@@ -294,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/grupos-especificos'
       fullPath: '/grupos-especificos'
       preLoaderRoute: typeof GruposEspecificosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapas': {
+      id: '/mapas'
+      path: '/mapas'
+      fullPath: '/mapas'
+      preLoaderRoute: typeof MapasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/perfil-populacao': {
@@ -364,6 +384,7 @@ const rootRouteChildren: RootRouteChildren = {
   FamiliasRoute: FamiliasRoute,
   FontesDadosRoute: FontesDadosRoute,
   GruposEspecificosRoute: GruposEspecificosRoute,
+  MapasRoute: MapasRoute,
   PerfilPopulacaoRoute: PerfilPopulacaoRoute,
   PessoasComDeficienciaRoute: PessoasComDeficienciaRoute,
   RedeSocioassistencialRoute: RedeSocioassistencialRoute,
