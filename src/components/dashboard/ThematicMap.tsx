@@ -175,11 +175,26 @@ function aggregateByZone(rows: TerritoryRow[], key: MetricKey) {
   );
 }
 
-export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
-  const [level, setLevel] = useState<MapLevel>("bairro");
-  const [metricKey, setMetricKey] = useState<MetricKey>("familias");
-  const [active, setActive] = useState<string | null>(null);
-  const { data, isLoading, error } = useQuery({
+function aggregateByNeighborhood(rows: TerritoryRow[], key: MetricKey) {
+  const groups = new Map<string, { value: number; families: number }>();
+  rows.forEach((row) => {
+    const label = canonicalNeighborhood(row.localidade);
+    const current = groups.get(label) ?? { value: 0, families: 0 };
+    if (key === "rendaPerCapita") current.value += row.rendaPerCapita * row.familias;
+    else current.value += row[key];
+    current.families += row.familias;
+    groups.set(label, current);
+  });
+  return new Map(
+    [...groups].map(([label, item]) => [
+      label,
+      key === "rendaPerCapita" && item.families ? item.value / item.families : item.value,
+    ]),
+  );
+}
+
+function useNeighborhoodGeometry() {
+  return useQuery({
     queryKey: ["natal-neighborhood-geometry"],
     queryFn: async () => {
       const response = await fetch("/data/natal-bairros.geojson");
@@ -188,9 +203,16 @@ export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
     },
     staleTime: Infinity,
   });
+}
+
+export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
+  const [level, setLevel] = useState<MapLevel>("bairro");
+  const [metricKey, setMetricKey] = useState<MetricKey>("familias");
+  const [active, setActive] = useState<string | null>(null);
+  const { data, isLoading, error } = useNeighborhoodGeometry();
   const metric = metrics.find((item) => item.key === metricKey) ?? metrics[0]!;
   const neighborhoodValues = useMemo(
-    () => new Map(rows.map((row) => [canonicalNeighborhood(row.localidade), row[metricKey]])),
+    () => aggregateByNeighborhood(rows, metricKey),
     [rows, metricKey],
   );
   const zoneValues = useMemo(() => aggregateByZone(rows, metricKey), [rows, metricKey]);
@@ -369,6 +391,96 @@ export function ThematicMap({ rows }: { rows: TerritoryRow[] }) {
             </p>
           </div>
         </aside>
+      </div>
+    </div>
+  );
+}
+
+export function FamilyConcentrationMap({ rows }: { rows: TerritoryRow[] }) {
+  const [active, setActive] = useState<string | null>(null);
+  const { data, isLoading, error } = useNeighborhoodGeometry();
+  const values = useMemo(() => aggregateByNeighborhood(rows, "familias"), [rows]);
+  const max = Math.max(0, ...values.values());
+  const projection = useMemo(() => (data ? buildProjection(data.features) : null), [data]);
+  const activeValue = active ? (values.get(active) ?? 0) : 0;
+  const colorFor = (value: number) => {
+    if (!value || !max) return "var(--color-muted)";
+    return mapColors[Math.min(4, Math.floor((value / max) * 5))] ?? mapColors[0]!;
+  };
+
+  return (
+    <div className="panel flex min-h-[404px] flex-col overflow-hidden">
+      <div className="border-b border-border px-5 py-4">
+        <h3 className="text-sm font-semibold">Concentração de famílias por bairro</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Intensidade conforme o número de famílias cadastradas.
+        </p>
+      </div>
+      <div className="relative flex min-h-0 flex-1 items-center justify-center bg-muted/35 p-4">
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">Carregando malha territorial...</p>
+        ) : null}
+        {error ? (
+          <p className="text-sm text-destructive">
+            {error instanceof Error ? error.message : "Erro ao carregar o mapa."}
+          </p>
+        ) : null}
+        {data && projection ? (
+          <svg
+            viewBox={`0 0 ${projection.width} ${projection.height}`}
+            className="h-[315px] w-full"
+            role="img"
+            aria-label="Concentração de famílias cadastradas por bairro de Natal"
+          >
+            {data.features.map((feature) => {
+              const neighborhood = canonicalNeighborhood(feature.properties.bairro);
+              const value = values.get(neighborhood) ?? 0;
+              return (
+                <path
+                  key={feature.properties.codigo}
+                  d={featurePath(feature, projection.project)}
+                  fill={colorFor(value)}
+                  stroke={active === neighborhood ? "var(--color-foreground)" : "var(--color-card)"}
+                  strokeWidth={active === neighborhood ? 2.5 : 1.2}
+                  className="cursor-pointer transition-[fill,stroke] duration-150 hover:brightness-95"
+                  onMouseEnter={() => setActive(neighborhood)}
+                  onFocus={() => setActive(neighborhood)}
+                  tabIndex={0}
+                >
+                  <title>
+                    {normalizarLocalidade(neighborhood)}: {formatValue(value)} famílias
+                  </title>
+                </path>
+              );
+            })}
+          </svg>
+        ) : null}
+        <div className="pointer-events-none absolute left-4 top-4 rounded-md border border-border bg-card/95 px-3 py-2 shadow-sm">
+          <p className="text-xs text-muted-foreground">
+            {active ? normalizarLocalidade(active) : "Passe sobre um bairro"}
+          </p>
+          <p className="mt-0.5 text-sm font-semibold">
+            {active ? `${formatValue(activeValue)} famílias` : "Cadastro Único"}
+          </p>
+        </div>
+        <div className="absolute bottom-4 left-4 rounded-md border border-border bg-card/95 p-2 shadow-sm">
+          <div className="flex">
+            {mapColors.map((color) => (
+              <span
+                key={color}
+                className="h-2 w-7 first:rounded-l last:rounded-r"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+            <span>Menor</span>
+            <span>Maior</span>
+          </div>
+        </div>
+        <p className="absolute bottom-3 right-4 text-[10px] text-muted-foreground">
+          Malha: IBGE, Censo 2022
+        </p>
       </div>
     </div>
   );

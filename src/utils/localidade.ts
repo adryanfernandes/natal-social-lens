@@ -40,6 +40,20 @@ const nomesOficiais: Record<string, string> = {
   TIROL: "Tirol",
 };
 
+const localidadesInvalidas = new Set([
+  "152",
+  "2024",
+  "3",
+  "4",
+  "5",
+  "700",
+  "BAIRRO",
+  "BALDO",
+  "NOS",
+  "NOSSA",
+  "RUA",
+]);
+
 function limparLocalidade(value: string): string {
   return value
     .toUpperCase()
@@ -78,6 +92,12 @@ const regrasLocalidade: Array<[RegExp, string]> = [
 ];
 
 export function normalizarLocalidade(value: string): string {
+  const valorInformado = value
+    .trim()
+    .replace(/^['"]|['"]$/g, "")
+    .toUpperCase();
+  if (!valorInformado || localidadesInvalidas.has(valorInformado)) return "NÃO INFORMADO";
+
   const texto = limparLocalidade(value);
   const regra = regrasLocalidade.find(([pattern]) => pattern.test(texto));
   const chave = regra?.[1] ?? texto;

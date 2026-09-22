@@ -3,7 +3,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { BarChartCard } from "@/components/dashboard/BarChartCard";
 import { DonutChartCard } from "@/components/dashboard/DonutChartCard";
 import { IndicatorCard } from "@/components/dashboard/IndicatorCard";
-import { EmptyMapPlaceholder } from "@/components/dashboard/EmptyMapPlaceholder";
+import { FamilyConcentrationMap } from "@/components/dashboard/ThematicMap";
 import { DataTable, type DataTableColumn } from "@/components/dashboard/DataTable";
 import { SectionTitle } from "@/components/dashboard/SectionTitle";
 import { useFilters } from "@/components/dashboard/filters-context";
@@ -136,7 +136,7 @@ function VisaoGeral() {
           description="Concentração de famílias cadastradas por bairro."
         />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <EmptyMapPlaceholder />
+          <FamilyConcentrationMap rows={rows} />
           <BarChartCard
             title="Bairros com maior número de famílias cadastradas"
             description="Cinco bairros com maior volume de cadastros."

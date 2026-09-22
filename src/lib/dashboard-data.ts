@@ -178,7 +178,10 @@ function normalizedLabel(value: string) {
 }
 
 function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: string, allLabel: string) {
-  const values = [...new Set(rows.map((row) => row.filters[key]).filter((value) => value && value !== "Nao informado"))];
+  const values = [...new Set(rows.map((row) => row.filters[key]).filter((value) => {
+    if (!value || value === "Nao informado") return false;
+    return key !== "localidade" || normalizarLocalidade(value) !== "NÃO INFORMADO";
+  }))];
   return [{ value: allValue, label: allLabel }, ...values.sort((a, b) => a.localeCompare(b, "pt-BR")).map(option)];
 }
 
@@ -232,10 +235,11 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     zones[row.filters.zona] = (zones[row.filters.zona] || 0) + row.families;
     const pbfLabel = row.familyPbf > 0 ? "Beneficiarios" : "Nao beneficiarios";
     pbf[pbfLabel] = (pbf[pbfLabel] || 0) + row.families;
-    const key = `${row.filters.zona}|${row.filters.localidade}`;
+    const localidade = normalizarLocalidade(row.filters.localidade);
+    const key = `${row.filters.zona}|${localidade}`;
     const current = territory.get(key) || {
       zona: row.filters.zona as TerritoryRow["zona"],
-      localidade: normalizarLocalidade(row.filters.localidade),
+      localidade,
       familias: 0,
       pessoas: 0,
       rendaPerCapita: 0,
@@ -309,7 +313,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     corRaca: series(counter(rows, "race")),
     faixaRendaFamiliar: incomeSeries(faixaRenda),
     indicadoresVulnerabilidade,
-    bairrosTop: tabelaIndicadores.slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
+    bairrosTop: tabelaIndicadores.filter((row) => row.localidade !== "NÃO INFORMADO").slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
     tabelaIndicadores,
     familiasCards: [
       metric("total", "Total de familias", families, "Cadastros familiares", "home"),
