@@ -54,6 +54,8 @@ const localidadesInvalidas = new Set([
   "RUA",
 ]);
 
+const localidadesNaoIdentificadas = new Set(["59120150", "CONJUNTO"]);
+
 function limparLocalidade(value: string): string {
   return value
     .toUpperCase()
@@ -67,7 +69,8 @@ function limparLocalidade(value: string): string {
 
 const regrasLocalidade: Array<[RegExp, string]> = [
   [/^BOM$/, "BOM PASTOR"],
-  [/^BAIRRO NORDESTE$/, "NORDESTE"],
+  [/^BAIRRO (?:NORDESTE|NODERSTE)$/, "NORDESTE"],
+  [/^BAIRRO CIDADE NOVA$/, "CIDADE NOVA"],
   [/APRESENT|NSA/, "NOSSA SENHORA DA APRESENTACAO"],
   [/NAZARE/, "NOSSA SENHORA DE NAZARE"],
   [/ALECR|AECRIM|ALEGRIM|ALENGRIM|ALERIM|ALCRIM|ALENCRIM/, "ALECRIM"],
@@ -98,6 +101,7 @@ export function normalizarLocalidade(value: string): string {
     .trim()
     .replace(/^['"]|['"]$/g, "")
     .toUpperCase();
+  if (localidadesNaoIdentificadas.has(valorInformado)) return "NÃO IDENTIFICADO";
   if (!valorInformado || localidadesInvalidas.has(valorInformado)) return "NÃO INFORMADO";
 
   const texto = limparLocalidade(value);

@@ -183,7 +183,7 @@ function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: strin
     return key === "localidade" ? normalizarLocalidade(value) : value;
   }).filter((value) => {
     if (!value || value === "Nao informado") return false;
-    return value !== "NÃO INFORMADO";
+    return value !== "NÃO INFORMADO" && value !== "NÃO IDENTIFICADO";
   }))];
   return [{ value: allValue, label: allLabel }, ...values.sort((a, b) => a.localeCompare(b, "pt-BR")).map(option)];
 }
@@ -316,7 +316,7 @@ function derive(allRows: CubeRow[], filters: DashboardFilters) {
     corRaca: series(counter(rows, "race")),
     faixaRendaFamiliar: incomeSeries(faixaRenda),
     indicadoresVulnerabilidade,
-    bairrosTop: tabelaIndicadores.filter((row) => row.localidade !== "NÃO INFORMADO").slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
+    bairrosTop: tabelaIndicadores.filter((row) => row.localidade !== "NÃO INFORMADO" && row.localidade !== "NÃO IDENTIFICADO").slice(0, 10).map((row) => ({ label: row.localidade, value: row.familias })),
     tabelaIndicadores,
     familiasCards: [
       metric("total", "Total de famílias", families, "Cadastros familiares", "home"),
