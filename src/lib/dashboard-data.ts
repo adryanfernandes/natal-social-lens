@@ -178,9 +178,12 @@ function normalizedLabel(value: string) {
 }
 
 function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: string, allLabel: string) {
-  const values = [...new Set(rows.map((row) => row.filters[key]).filter((value) => {
+  const values = [...new Set(rows.map((row) => {
+    const value = row.filters[key];
+    return key === "localidade" ? normalizarLocalidade(value) : value;
+  }).filter((value) => {
     if (!value || value === "Nao informado") return false;
-    return key !== "localidade" || normalizarLocalidade(value) !== "NÃO INFORMADO";
+    return value !== "NÃO INFORMADO";
   }))];
   return [{ value: allValue, label: allLabel }, ...values.sort((a, b) => a.localeCompare(b, "pt-BR")).map(option)];
 }
@@ -188,7 +191,7 @@ function options(rows: CubeRow[], key: keyof CubeRow["filters"], allValue: strin
 function selected(rows: CubeRow[], filters: DashboardFilters) {
   return rows.filter((row) => {
     if (filters.zona !== "todas" && row.filters.zona !== filters.zona) return false;
-    if (filters.localidade !== "todas" && row.filters.localidade !== filters.localidade) return false;
+    if (filters.localidade !== "todas" && normalizarLocalidade(row.filters.localidade) !== filters.localidade) return false;
     if (filters.equipamento !== "todos" && row.filters.equipamento !== filters.equipamento) return false;
     if (filters.faixaRenda !== "todas" && row.filters.faixaRenda !== filters.faixaRenda) return false;
     if (filters.pbf !== "todos" && row.filters.pbf !== filters.pbf) return false;

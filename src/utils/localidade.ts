@@ -66,6 +66,8 @@ function limparLocalidade(value: string): string {
 }
 
 const regrasLocalidade: Array<[RegExp, string]> = [
+  [/^BOM$/, "BOM PASTOR"],
+  [/^BAIRRO NORDESTE$/, "NORDESTE"],
   [/APRESENT|NSA/, "NOSSA SENHORA DA APRESENTACAO"],
   [/NAZARE/, "NOSSA SENHORA DE NAZARE"],
   [/ALECR|AECRIM|ALEGRIM|ALENGRIM|ALERIM|ALCRIM|ALENCRIM/, "ALECRIM"],
